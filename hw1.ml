@@ -424,6 +424,36 @@ let sampleTests =
                  "myxomatosis"
                  false
                  "sample: palindrome 2"
+    );
+    (fun () -> mkTest
+                 palindrome
+                 "a"
+                 true
+                 "sample: palindrome 3"
+    );
+    (fun () -> mkTest
+                 palindrome
+                 ""
+                 true
+                 "sample: palindrome 4"
+    );
+    (fun () -> mkTest
+                 palindrome
+                 "ab"
+                 false
+                 "sample: palindrome 5"
+    );
+    (fun () -> mkTest
+                 palindrome
+                 "aba"
+                 true
+                 "sample: palindrome 6"
+    );
+    (fun () -> mkTest
+                 palindrome
+                 "abba"
+                 true
+                 "sample: palindrome 7"
     )]
 
 let _ =
