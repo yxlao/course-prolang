@@ -103,8 +103,16 @@ let explode s =
   in
     go 0
 
-let palindrome w = failwith "TBD"
-
+let palindrome w = 
+  let ws = explode w in
+  let rev_ws = listReverse ws in
+  let rec isSameList xs ys = match (xs, ys) with
+    | ([], []) -> true
+    | ([], _)  -> false
+    | (_, [])  -> false
+    | (xh::xt, yh::yt) -> xh = yh && isSameList xt yt
+  in
+    isSameList ws rev_ws
 
 (* uncomment and run AFTER you have implemented digitalRoot 
 
