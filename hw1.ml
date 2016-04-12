@@ -56,7 +56,9 @@ let digits n = digitsOfInt (abs n)
 *)
 
 
-let rec additivePersistence n = failwith "TBD"
+let rec additivePersistence n = match n < 10 with
+  | true -> 0
+  | _    -> 1 + additivePersistence (sumList (digitsOfInt n))
 
 (* uncomment and run AFTER you have implemented additivePersistence  
 
@@ -66,7 +68,9 @@ let rec additivePersistence n = failwith "TBD"
 
 (* NOTE: assume that digitalRoot is only called with positive numbers *)
 
-let rec digitalRoot n = failwith "TBD"
+let rec digitalRoot n = match n < 10 with
+  | true -> n
+  | _    -> digitalRoot (sumList (digitsOfInt n))
 
 (* uncomment and run AFTER you have implemented digitalRoot 
 
