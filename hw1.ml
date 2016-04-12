@@ -306,11 +306,11 @@ let sampleTests =
                  "sample: digits 3"
     );
     (* (fun () -> mkTest
-                 digits
-                 (0)
-                 [0]
-                 "sample: digits 4"
-    ); *)
+       digits
+       (0)
+       [0]
+       "sample: digits 4"
+       ); *)
     (fun () -> mkTest
                  additivePersistence
                  9876
@@ -318,9 +318,69 @@ let sampleTests =
                  "sample: additivePersistence1"
     );
     (fun () -> mkTest
+                 additivePersistence
+                 1
+                 0
+                 "sample: additivePersistence2"
+    );
+    (fun () -> mkTest
+                 additivePersistence
+                 9
+                 0
+                 "sample: additivePersistence3"
+    );
+    (fun () -> mkTest
+                 additivePersistence
+                 10
+                 1
+                 "sample: additivePersistence4"
+    );
+    (fun () -> mkTest
+                 additivePersistence
+                 987654321
+                 2
+                 "sample: additivePersistence5"
+    );
+    (fun () -> mkTest
+                 additivePersistence
+                 91987654321
+                 3
+                 "sample: additivePersistence6"
+    );
+    (fun () -> mkTest
                  digitalRoot
                  9876
                  3
+                 "sample: digitalRoot"
+    );
+    (fun () -> mkTest
+                 digitalRoot
+                 1
+                 1
+                 "sample: digitalRoot"
+    );
+    (fun () -> mkTest
+                 digitalRoot
+                 9
+                 9
+                 "sample: digitalRoot"
+    );
+    (fun () -> mkTest
+                 digitalRoot
+                 10
+                 1
+                 "sample: digitalRoot"
+    );
+    (fun () -> mkTest
+                 digitalRoot
+                 20
+                 2
+                 "sample: digitalRoot"
+    );
+    (fun () -> mkTest
+                 digitalRoot
+                 987654321
+                 9
                  "sample: digitalRoot"
     );
     (fun () -> mkTest
