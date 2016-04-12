@@ -249,43 +249,43 @@ let sampleTests =
                  digitsOfInt
                  0
                  []
-                 "sample: digitsOfInt 2"
+                 "sample: digitsOfInt 3"
     );
     (fun () -> mkTest
                  digitsOfInt
                  (-1)
                  []
-                 "sample: digitsOfInt 2"
+                 "sample: digitsOfInt 4"
     );
     (fun () -> mkTest
                  digitsOfInt
                  (-123)
                  []
-                 "sample: digitsOfInt 2"
+                 "sample: digitsOfInt 5"
     );
     (fun () -> mkTest
                  digitsOfInt
                  1
                  [1]
-                 "sample: digitsOfInt 2"
+                 "sample: digitsOfInt 6"
     );
     (fun () -> mkTest
                  digitsOfInt
                  5
                  [5]
-                 "sample: digitsOfInt 2"
+                 "sample: digitsOfInt 7"
     );
     (fun () -> mkTest
                  digitsOfInt
                  12
                  [1;2]
-                 "sample: digitsOfInt 2"
+                 "sample: digitsOfInt 8"
     );
     (fun () -> mkTest
                  digitsOfInt
                  987654321
                  [9;8;7;6;5;4;3;2;1]
-                 "sample: digitsOfInt 2"
+                 "sample: digitsOfInt 9"
     );
     (fun () -> mkTest
                  digits
@@ -299,6 +299,18 @@ let sampleTests =
                  [2;3;4;2;2]
                  "sample: digits 2"
     );
+    (fun () -> mkTest
+                 digits
+                 (-1)
+                 [1]
+                 "sample: digits 3"
+    );
+    (* (fun () -> mkTest
+                 digits
+                 (0)
+                 [0]
+                 "sample: digits 4"
+    ); *)
     (fun () -> mkTest
                  additivePersistence
                  9876
