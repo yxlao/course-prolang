@@ -396,6 +396,24 @@ let sampleTests =
                  "sample: rev 2"
     );
     (fun () -> mkTest
+                 listReverse
+                 []
+                 []
+                 "sample: reverse 3"
+    );
+    (fun () -> mkTest
+                 listReverse
+                 [1]
+                 [1]
+                 "sample: reverse 4"
+    );
+    (fun () -> mkTest
+                 listReverse
+                 [1;2;3]
+                 [3;2;1]
+                 "sample: reverse 5"
+    );
+    (fun () -> mkTest
                  palindrome
                  "malayalam"
                  true
