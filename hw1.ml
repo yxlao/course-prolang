@@ -246,6 +246,48 @@ let sampleTests =
                  "sample: digitsOfInt 2"
     );
     (fun () -> mkTest
+                 digitsOfInt
+                 0
+                 []
+                 "sample: digitsOfInt 2"
+    );
+    (fun () -> mkTest
+                 digitsOfInt
+                 (-1)
+                 []
+                 "sample: digitsOfInt 2"
+    );
+    (fun () -> mkTest
+                 digitsOfInt
+                 (-123)
+                 []
+                 "sample: digitsOfInt 2"
+    );
+    (fun () -> mkTest
+                 digitsOfInt
+                 1
+                 [1]
+                 "sample: digitsOfInt 2"
+    );
+    (fun () -> mkTest
+                 digitsOfInt
+                 5
+                 [5]
+                 "sample: digitsOfInt 2"
+    );
+    (fun () -> mkTest
+                 digitsOfInt
+                 12
+                 [1;2]
+                 "sample: digitsOfInt 2"
+    );
+    (fun () -> mkTest
+                 digitsOfInt
+                 987654321
+                 [9;8;7;6;5;4;3;2;1]
+                 "sample: digitsOfInt 2"
+    );
+    (fun () -> mkTest
                  digits
                  31243
                  [3;1;2;4;3]
