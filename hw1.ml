@@ -3,7 +3,10 @@
 *)
 
 (* sumList : int list -> int *) 
-let rec sumList xs = failwith "TBD:sumList"
+let rec sumList xs = match xs with
+  | []    -> 0
+  | [a]   -> a
+  | (h::t) -> h + sumList t
 
 (* uncomment and run AFTER you have implemented sumList
 
