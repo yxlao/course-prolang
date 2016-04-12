@@ -79,7 +79,9 @@ let rec digitalRoot n = match n < 10 with
 *)
 
 
-let rec listReverse l = failwith "TBD"
+let rec listReverse l = match l with
+  | []     -> []
+  | (h::t) -> (listReverse t) @ [h]
 
 (* uncomment and run AFTER you have implemented listReverse
 
