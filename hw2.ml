@@ -18,6 +18,11 @@
 *)
 
 let rec assoc (d,k,l) = failwith "to be written"
+let rec assoc (d,k,l) = match l with
+  | [] -> d
+  | h::t -> let (key,value) = h in
+        if k = key then value
+        else assoc (d,k,t)
 
 (* uncomment after implementing assoc
 
