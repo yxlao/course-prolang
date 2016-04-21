@@ -45,11 +45,14 @@ let rec assoc (d,k,l) = match l with
 let removeDuplicates l = 
   let rec helper (seen,rest) = 
     match rest with 
-        [] -> seen
+      | [] -> seen
       | h::t -> 
-          let seen' = failwith "to be written" in
-          let rest' = failwith "to be written" in 
-            	  helper (seen',rest') 
+          let seen' = 
+            if List.mem h seen then seen
+            else [h] @ seen 
+          in
+          let rest' = t in 
+            helper (seen',rest') 
   in
     List.rev (helper ([],l))
 
