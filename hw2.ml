@@ -49,7 +49,7 @@ let removeDuplicates l =
       | h::t -> 
           let seen' = 
             if List.mem h seen then seen
-            else [h] @ seen 
+            else h :: seen 
           in
           let rest' = t in 
             helper (seen',rest') 
