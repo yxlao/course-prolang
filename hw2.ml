@@ -72,7 +72,10 @@ let removeDuplicates l =
  *
  *  ** your function should be tail recursive **
 *)
-let rec wwhile (f,b) = failwith "to be written"
+let rec wwhile (f,b) = 
+  let (next_b, is_valid) = f b in
+    if is_valid then wwhile (f, next_b)
+    else next_b
 
 (* uncomment after implementing wwhile
 
