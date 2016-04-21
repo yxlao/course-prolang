@@ -17,7 +17,6 @@
  *  ** your function should be tail recursive **
 *)
 
-let rec assoc (d,k,l) = failwith "to be written"
 let rec assoc (d,k,l) = match l with
   | [] -> d
   | h::t -> let (key,value) = h in
