@@ -92,7 +92,8 @@ let rec wwhile (f,b) =
 *)
 
 (* fill in the code wherever it says : failwith "to be written" *)
-let fixpoint (f,b) = wwhile ((fun x -> (f x, (f x) != x)),b)
+(* let fixpoint (f,b) = wwhile ((fun x -> (f x, (f x) != x)),b) *)
+let fixpoint (f,b) = wwhile ((fun x -> let fx = (f x) in (fx, fx != x)),b)
 
 (* uncomment after implementing fixpoint 
  *
