@@ -127,7 +127,16 @@ type expr =
 (* exprToString : expr -> string
    Complete this function to convert an expr to a string 
 *)
-let rec exprToString e = failwith "to be written"
+(* let rec exprToString e = failwith "to be written" *)
+let rec exprToString e = match e with
+  | VarX -> "x"
+  | VarY -> "y"
+  | Sine(x) -> "sin(pi*" ^ exprToString x ^ ")"
+  | Cosine(x) -> "cos(pi*" ^ exprToString x ^ ")"
+  | Average(x,y) -> "((" ^ exprToString x ^ "+" ^ exprToString y ^ ")/2)"
+  | Times(x,y) -> exprToString x ^ "*" ^ exprToString y
+  | Thresh(a,b,c,d) -> "(" ^ exprToString a ^ "<" ^ exprToString b ^ "?"^ exprToString c ^ ":" ^ exprToString d ^ ")"
+
 
 (* uncomment after implementing exprToString
 
@@ -164,6 +173,15 @@ let eval_fn e (x,y) =
   let rv = eval (e,x,y) in
     assert (-1.0 <= rv && rv <= 1.0);
     rv
+
+let sampleExpr =
+  buildCosine(buildSine(buildTimes(buildCosine(buildAverage(buildCosine(
+                                                              buildX()),buildTimes(buildCosine (buildCosine (buildAverage
+                                                                                                               (buildTimes (buildY(),buildY()),buildCosine (buildX())))),
+                                                                                   buildCosine (buildTimes (buildSine (buildCosine
+                                                                                                                         (buildY())),buildAverage (buildSine (buildX()), buildTimes
+                                                                                                                                                                           (buildX(),buildX()))))))),buildY())))
+
 
 let sampleExpr =
   buildCosine(buildSine(buildTimes(buildCosine(buildAverage(buildCosine(
