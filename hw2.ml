@@ -25,16 +25,16 @@ let rec assoc (d,k,l) = match l with
 
 (* uncomment after implementing assoc
 
-   let _ = assoc (-1,"william",[("ranjit",85);("william",23);("moose",44)]);;    
+   let _ = assoc (-1,"william",[("ranjit",85);("william",23);("moose",44)]);;
 
    let _ = assoc (-1,"bob",[("ranjit",85);("william",23);("moose",44)]);;
 
 *)
 
-(* removeDuplicates : int list -> int list 
+(* removeDuplicates : int list -> int list
  * or more generally, removeDuplicates : 'a list -> 'a list
  * (removeDuplicates l) is the list of elements of l with duplicates (second,
- * third ... occurrences) removed, and where the remaining elements 
+ * third ... occurrences) removed, and where the remaining elements
  * appear in the same order as in l.
  * e.g. (removeDuplicates [1;6;2;4;12;2;13;6;9]) is [1;6;2;4;12;13;9]
  *
@@ -42,17 +42,17 @@ let rec assoc (d,k,l) = match l with
  * for this problem only, you may use the library function List.mem and List.rev
 *)
 
-let removeDuplicates l = 
-  let rec helper (seen,rest) = 
-    match rest with 
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
       | [] -> seen
-      | h::t -> 
-          let seen' = 
+      | h::t ->
+          let seen' =
             if List.mem h seen then seen
-            else h :: seen 
+            else h :: seen
           in
-          let rest' = t in 
-            helper (seen',rest') 
+          let rest' = t in
+            helper (seen',rest')
   in
     List.rev (helper ([],l))
 
@@ -72,7 +72,7 @@ let removeDuplicates l =
  *
  *  ** your function should be tail recursive **
 *)
-let rec wwhile (f,b) = 
+let rec wwhile (f,b) =
   let (next_b, is_valid) = f b in
     if is_valid then wwhile (f, next_b)
     else next_b
@@ -95,9 +95,9 @@ let rec wwhile (f,b) =
 (* let fixpoint (f,b) = wwhile ((fun x -> (f x, (f x) != x)),b) *)
 let fixpoint (f,b) = wwhile ((fun x -> let fx = (f x) in (fx, fx != x)),b)
 
-(* uncomment after implementing fixpoint 
+(* uncomment after implementing fixpoint
  *
-   let g x = truncate (1e6 *. cos (1e-6 *. float x)) in fixpoint (g, 0);; 
+   let g x = truncate (1e6 *. cos (1e-6 *. float x)) in fixpoint (g, 0);;
 
    let collatz n = match n with 1 -> 1 | _ when n mod 2 = 0 -> n/2 | _ -> 3*n + 1;;
 
@@ -113,19 +113,19 @@ let fixpoint (f,b) = wwhile ((fun x -> let fx = (f x) in (fx, fx != x)),b)
 (*** Problem 2: Random Art **************************************************************)
 (****************************************************************************************)
 
-(* based on code by Chris Stone *) 
+(* based on code by Chris Stone *)
 
-type expr = 
+type expr =
       VarX
     | VarY
     | Sine     of expr
     | Cosine   of expr
     | Average  of expr * expr
     | Times    of expr * expr
-    | Thresh   of expr * expr * expr * expr	
+    | Thresh   of expr * expr * expr * expr
 
 (* exprToString : expr -> string
-   Complete this function to convert an expr to a string 
+   Complete this function to convert an expr to a string
 *)
 (* let rec exprToString e = failwith "to be written" *)
 let rec exprToString e = match e with
@@ -142,7 +142,7 @@ let rec exprToString e = match e with
 
    let sampleExpr1 = Thresh(VarX,VarY,VarX,(Times(Sine(VarX),Cosine(Average(VarX,VarY)))));;
 
-   let _ = exprToString sampleExpr1 
+   let _ = exprToString sampleExpr1
 
 *)
 
@@ -163,13 +163,20 @@ let buildThresh(a,b,a_less,b_less) = Thresh(a,b,a_less,b_less)
 
 let pi = 4.0 *. atan 1.0
 
-(* eval : expr -> float * float -> float 
+(* eval : expr -> float * float -> float
    Evaluator for expressions in x and y *)
 
-let rec eval (e,x,y) = failwith "to be written"
+let rec eval (e,x,y) = match e with
+  | VarX -> x
+  | VarY -> y
+  | Sine(expr) -> sin (3.14 *. (eval (expr,x,y)))
+  | Cosine(expr) -> cos (3.14 *. (eval (expr,x,y)))
+  | Average(expr1, expr2) -> (eval (expr1,x,y) +. eval (expr2,x,y)) /. 2.0
+  | Times(expr1, expr2) -> (eval (expr1,x,y)) *. (eval (expr2,x,y))
+  | Thresh(a,b,c,d) -> if (eval (a,x,y)) < (eval (b,x,y)) then (eval (c,x,y)) else (eval (d,x,y))
 
 
-let eval_fn e (x,y) = 
+let eval_fn e (x,y) =
   let rv = eval (e,x,y) in
     assert (-1.0 <= rv && rv <= 1.0);
     rv
@@ -204,8 +211,8 @@ let sampleExpr2 =
 
 (******************* Functions you need to write **********)
 
-(* build: (int*int->int) * int -> Expr 
-   Build an expression tree.  The second argument is the depth, 
+(* build: (int*int->int) * int -> Expr
+   Build an expression tree.  The second argument is the depth,
    the first is a random function.  A call to rand(2,5) will give
    you a random number in the range [2,5].
 
@@ -217,18 +224,18 @@ let rec build (rand, depth) = failwith "to be implemented"
 
 
 (* g1,g2,g3,c1,c2,c3 : unit -> int * int * int
- * these functions should return the parameters needed to create your 
+ * these functions should return the parameters needed to create your
  * top three color / grayscale pictures.
  * they should return (depth,seed1,seed2)
 *)
 
-let g1 () = failwith "to be implemented"  
-let g2 () = failwith "to be implemented"  
-let g3 () = failwith "to be implemented"  
+let g1 () = failwith "to be implemented"
+let g2 () = failwith "to be implemented"
+let g3 () = failwith "to be implemented"
 
 let c1 () = failwith "to be implemented"
-let c2 () = failwith "to be implemented" 
-let c3 () = failwith "to be implemented" 
+let c2 () = failwith "to be implemented"
+let c3 () = failwith "to be implemented"
 
 
 (******************** Random Number Generators ************)
@@ -237,15 +244,15 @@ let c3 () = failwith "to be implemented"
    Returns a function that, given a low and a high, returns
    a random int between low and high - 1.  seed1 and seed2 are the
    random number seeds.  Pass the result of this function
-   to build. 
+   to build.
 
    Example:
-   let rand = makeRand(10,39) in 
-   let x =  rand(1,4) in 
+   let rand = makeRand(10,39) in
+   let x =  rand(1,4) in
    (* x is 1,2 or 3 *)
 *)
 
-let makeRand (seed1, seed2) = 
+let makeRand (seed1, seed2) =
   let seed = (Array.of_list [seed1;seed2]) in
   let s = Random.State.make seed in
     (fun (x,y) -> (x + (Random.State.int s (y-x))))
@@ -256,7 +263,7 @@ let rec rseq g r n =
 
 (********************* Bitmap creation code ***************)
 
-(* 
+(*
 You should not have to modify the remaining functions.
 Add testing code to the bottom of the file.
 *)
@@ -273,14 +280,14 @@ let toIntensity z = int_of_float (127.5 +. (127.5 *. z))
    inclusive; the results get thrown away.
 *)
 
-let rec ffor (low,high,f) = 
-  if low > high then () else 
-    let _ = f low in 
+let rec ffor (low,high,f) =
+  if low > high then () else
+    let _ = f low in
       ffor (low+1,high,f)
 
 (* emitGrayscale :  ((real * real) -> real) * int -> unit
    emitGrayscale(f, N) emits the values of the expression
-   f (converted to intensity) to the file art.pgm for an 
+   f (converted to intensity) to the file art.pgm for an
    2N+1 by 2N+1 grid of points taken from [-1,1] x [-1,1].
 
    See "man pgm" on turing for a full description of the file format,
@@ -293,12 +300,12 @@ let emitGrayscale (f,n,name) =
   let fname  = ("art_g_"^name) in
   let chan = open_out (fname^".pgm") in
   (* Picture will be 2*N+1 pixels on a side *)
-  let n2p1 = n*2+1 in   
+  let n2p1 = n*2+1 in
   let _ = output_string chan (Format.sprintf "P5 %d %d 255\n" n2p1 n2p1) in
-  let _ = 
-    ffor (-n, n, 
+  let _ =
+    ffor (-n, n,
           fun ix ->
-            ffor (-n, n, 
+            ffor (-n, n,
                   fun iy ->
                     (* Convert grid locations to [-1,1] *)
                     let x = toReal(ix,n) in
@@ -308,7 +315,7 @@ let emitGrayscale (f,n,name) =
                     (* Convert the result to a grayscale value *)
                     let iz = toIntensity(z) in
                       (* Emit one byte for this pixel *)
-                      output_char chan (char_of_int iz))) in 
+                      output_char chan (char_of_int iz))) in
     close_out chan;
     ignore(Sys.command ("convert "^fname^".pgm "^fname^".jpg"));
     ignore(Sys.command ("rm "^fname^".pgm"))
@@ -342,7 +349,7 @@ let doRandomGray (depth,seed1,seed2) =
    (real*real->real) * int -> unit
    emitColor(f1, f2, f3, N) emits the values of the expressions
    f1, f2, and f3 (converted to RGB intensities) to the output
-   file art.ppm for an 2N+1 by 2N+1 grid of points taken 
+   file art.ppm for an 2N+1 by 2N+1 grid of points taken
    from [-1,1] x [-1,1].
 
    See "man ppm" on turing for a full description of the file format,
@@ -355,12 +362,12 @@ let emitColor (f1,f2,f3,n,name) =
   let fname  = ("art_c_"^name) in
   let chan = open_out (fname^".ppm") in
   (* Picture will be 2*N+1 pixels on a side *)
-  let n2p1 = n*2+1 in   
+  let n2p1 = n*2+1 in
   let _ = output_string chan (Format.sprintf "P6 %d %d 255\n" n2p1 n2p1) in
-  let _ = 
-    ffor (-n, n, 
+  let _ =
+    ffor (-n, n,
           fun ix ->
-            ffor (-n, n, 
+            ffor (-n, n,
                   fun iy ->
                     (* Convert grid locations to [-1,1] *)
                     let x = toReal(ix,n) in
@@ -379,16 +386,16 @@ let emitColor (f1,f2,f3,n,name) =
                       output_char chan (char_of_int iz1);
                       output_char chan (char_of_int iz2);
                       output_char chan (char_of_int iz3);
-                 )) in  
+                 )) in
     close_out chan;
     ignore(Sys.command ("convert "^fname^".ppm  "^fname^".jpg"));
-    ignore(Sys.command ("rm "^fname^".ppm")) 
+    ignore(Sys.command ("rm "^fname^".ppm"))
 
 (* doRandomColor : int * int * int -> unit
    Given a depth and two seeds for the random number generator,
    create a single random expression and convert it to a
    color picture with the name "art.ppm"  (note the different
-   extension from toGray) 
+   extension from toGray)
 *)
 let doRandomColor (depth,seed1,seed2) =
   (* Initialize random-number generator g *)
@@ -432,50 +439,50 @@ let score = ref 0
 let max = ref 0
 let timeout = 300
 
-let runWTimeout (f,arg,out,time) = 
+let runWTimeout (f,arg,out,time) =
   try if compare (f arg) out = 0 then Pass else Fail
-  with e -> (print130 ("Uncaught Exception: "^(Printexc.to_string e)); ErrorCode "exception") 
+  with e -> (print130 ("Uncaught Exception: "^(Printexc.to_string e)); ErrorCode "exception")
 
 let testTest () =
   let testGood x = 1 in
-  let testBad x = 0 in 
+  let testBad x = 0 in
   let testException x = raise TestException in
   let rec testTimeout x = testTimeout x in
-    runWTimeout(testGood,0,1,5) = Pass &&  
-    runWTimeout(testBad,0,1,5) = Fail &&  
-    runWTimeout(testException,0,1,5) = ErrorCode "exception" && 
+    runWTimeout(testGood,0,1,5) = Pass &&
+    runWTimeout(testBad,0,1,5) = Fail &&
+    runWTimeout(testException,0,1,5) = ErrorCode "exception" &&
     runWTimeout(testTimeout,0,1,5) = ErrorCode "timeout"
 
 let runTest ((f,arg,out),points,name) =
   let _   = max := !max + points in
-  let outs = 
-    match runWTimeout(f,arg,out,timeout) with 
+  let outs =
+    match runWTimeout(f,arg,out,timeout) with
         Pass -> (score := !score + points; "[pass]")
       | Fail -> "[fail]"
       | ErrorCode e -> "[error: "^e^"]"  in
     name^" "^outs^" ("^(string_of_int points)^")\n"
 
 (* explode : string -> char list *)
-let explode s = 
-  let rec _exp i = 
+let explode s =
+  let rec _exp i =
     if i >= String.length s then [] else (s.[i])::(_exp (i+1)) in
     _exp 0
 
-let implode cs = 
+let implode cs =
   String.concat "" (List.map (String.make 1) cs)
 
-let drop_paren s = 
+let drop_paren s =
   implode (List.filter (fun c -> not (List.mem c ['(';' ';')'])) (explode s))
 
-let eq_real p (r1,r2) = 
+let eq_real p (r1,r2) =
   (r1 -. r2) < p || (r2 -. r1) < p
 
 let mkTest f x y name = runTest ((f, x, y), 1, name)
 
 let badTest () = "WARNING: Your tests are not valid!!\n"
 
-let scoreMsg () = 
-  Format.sprintf "Results: Score/Max = %d / %d \n" !score !max 
+let scoreMsg () =
+  Format.sprintf "Results: Score/Max = %d / %d \n" !score !max
 
 let sampleTests =
   [
@@ -485,91 +492,91 @@ let sampleTests =
                  23
                  "sample: assoc 1"
     );
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  assoc
                  (-1, "bob", [("ranjit",85);("william",23);("moose",44)])
                  (-1)
                  "sample: assoc 2"
-    ); 
-    (fun () -> mkTest 
+    );
+    (fun () -> mkTest
                  removeDuplicates
                  [1;6;2;4;12;2;13;6;9]
                  [1;6;2;4;12;13;9]
                  "sample: removeDuplicates 2"
     );
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  removeDuplicates
                  [1;1;1]
                  [1]
                  "sample: removeDuplicates 2"
     );
 
-    (fun () -> mkTest 
-                 wwhile 
-                 ((fun x -> let xx = x*x*x in (xx, xx < 100)), 2) 
-                 512 
+    (fun () -> mkTest
+                 wwhile
+                 ((fun x -> let xx = x*x*x in (xx, xx < 100)), 2)
+                 512
                  "sample: wwhile 1"
-    ); 
-    (fun () -> mkTest 
+    );
+    (fun () -> mkTest
                  fixpoint
                  ((fun x -> truncate (1e6 *. cos (1e-6 *. float x))), 0)
                  739085
                  "sample: fixpoint 1"
-    ); 
+    );
 
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  emitGrayscale
                  (eval_fn sampleExpr, 150,"sample")
                  ()
                  "sample: eval_fn 1: manual"
-    ); 
-    (fun () -> mkTest 
+    );
+    (fun () -> mkTest
                  emitGrayscale
                  (eval_fn sampleExpr2, 150,"sample2")
                  ()
                  "sample: eval_fn 2: manual"
     );
 
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  (fun () -> doRandomGray (g1 ()))
                  ()
                  ()
                  "sample: gray 1 : manual"
     );
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  (fun () -> doRandomGray (g2 ()))
                  ()
                  ()
                  "sample: gray 2 : manual"
     );
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  (fun () -> doRandomGray (g3 ()))
                  ()
                  ()
                  "sample: gray 3 : manual"
     );
 
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  (fun () -> doRandomColor (c1 ()))
                  ()
                  ()
                  "sample: color 1 : manual"
     );
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  (fun () -> doRandomColor (c2 ()))
                  ()
                  ()
                  "sample: color 2 : manual"
     );
-    (fun () -> mkTest 
+    (fun () -> mkTest
                  (fun () -> doRandomColor (c3 ()))
                  ()
                  ()
                  "sample: color 3 : manual"
-    )] 
+    )]
 
-let doTest f = 
-  try f () with ex -> 
+let doTest f =
+  try f () with ex ->
     Format.sprintf "WARNING: INVALID TEST THROWS EXCEPTION!!: %s \n\n"
       (Printexc.to_string ex)
 
@@ -578,4 +585,3 @@ let _ =
   let _      = List.iter print130 (report@([scoreMsg()])) in
   let _      = print130 ("Compiled\n")                    in
     (!score, !max)
-
