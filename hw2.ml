@@ -247,13 +247,13 @@ let rec build (rand, depth) =
  * they should return (depth,seed1,seed2)
 *)
 
-let g1 () = (8, 1, 1)
-let g2 () = (8, 2, 2)
-let g3 () = (8, 3, 3)
+let g1 () = (8, 56, 39)
+let g2 () = (9, 0, 118)
+let g3 () = (8, 2, 5)
 
-let c1 () = (8, 4, 4)
-let c2 () = (8, 5, 5)
-let c3 () = (8, 6, 6)
+let c1 () = (8, 165, 3)
+let c2 () = (8, 38, 98)
+let c3 () = (8, 151, 115)
 
 
 (******************** Random Number Generators ************)
