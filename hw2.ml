@@ -220,7 +220,21 @@ let sampleExpr2 =
    the expression.
 *)
 
-let rec build (rand, depth) = failwith "to be implemented"
+let rec build (rand, depth) =
+  if depth = 0 then
+    match rand (0,2) with
+      | 0 -> buildX()
+      | 1 -> buildY()
+      | _ -> buildX()
+  else
+    match rand (0,5) with
+      | 0 -> buildSine (build (rand, depth-1))
+      | 1 -> buildCosine (build (rand, depth-1))
+      | 2 -> buildAverage (build (rand, depth-1), build (rand, depth-1))
+      | 3 -> buildTimes (build (rand, depth-1), build (rand, depth-1))
+      | 4 -> buildThresh(build (rand, depth-1), build (rand, depth-1),
+                         build (rand, depth-1), build (rand, depth-1))
+      | _ -> buildSine (build (rand, depth-1))
 
 
 (* g1,g2,g3,c1,c2,c3 : unit -> int * int * int
@@ -229,13 +243,13 @@ let rec build (rand, depth) = failwith "to be implemented"
  * they should return (depth,seed1,seed2)
 *)
 
-let g1 () = failwith "to be implemented"
-let g2 () = failwith "to be implemented"
-let g3 () = failwith "to be implemented"
+let g1 () = (9, 1, 2)
+let g2 () = (9, 1, 3)
+let g3 () = (9, 1, 4)
 
-let c1 () = failwith "to be implemented"
-let c2 () = failwith "to be implemented"
-let c3 () = failwith "to be implemented"
+let c1 () = (9, 1, 2)
+let c2 () = (9, 1, 3)
+let c3 () = (9, 1, 4)
 
 
 (******************** Random Number Generators ************)
