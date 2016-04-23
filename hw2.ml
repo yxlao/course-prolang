@@ -176,8 +176,8 @@ let pi = 4.0 *. atan 1.0
 let rec eval (e,x,y) = match e with
   | VarX                              -> x
   | VarY                              -> y
-  | Sine(expr)                        -> sin (3.14 *. (eval (expr,x,y)))
-  | Cosine(expr)                      -> cos (3.14 *. (eval (expr,x,y)))
+  | Sine(expr)                        -> sin (pi *. (eval (expr,x,y)))
+  | Cosine(expr)                      -> cos (pi *. (eval (expr,x,y)))
   | Average(expr1, expr2)             -> (eval (expr1,x,y) +. eval (expr2,x,y)) /. 2.0
   | Times(expr1, expr2)               -> (eval (expr1,x,y)) *. (eval (expr2,x,y))
   | Thresh(a,b,c,d)                   -> if (eval (a,x,y)) < (eval (b,x,y)) then (eval (c,x,y)) else (eval (d,x,y))
