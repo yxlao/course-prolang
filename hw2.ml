@@ -118,11 +118,13 @@ let fixpoint (f,b) = wwhile ((fun x -> let fx = (f x) in (fx, fx != x)),b)
 type expr =
       VarX
     | VarY
-    | Sine     of expr
-    | Cosine   of expr
-    | Average  of expr * expr
-    | Times    of expr * expr
-    | Thresh   of expr * expr * expr * expr
+    | Sine       of expr
+    | Cosine     of expr
+    | Average    of expr * expr
+    | Times      of expr * expr
+    | Thresh     of expr * expr * expr * expr
+    | Identity   of expr
+    | ThreeAverage of expr * expr * expr
 
 (* exprToString : expr -> string
    Complete this function to convert an expr to a string
@@ -136,6 +138,9 @@ let rec exprToString e = match e with
   | Average(x,y) -> "((" ^ exprToString x ^ "+" ^ exprToString y ^ ")/2)"
   | Times(x,y) -> exprToString x ^ "*" ^ exprToString y
   | Thresh(a,b,c,d) -> "(" ^ exprToString a ^ "<" ^ exprToString b ^ "?"^ exprToString c ^ ":" ^ exprToString d ^ ")"
+  | Identity(x) -> "(" ^ exprToString x ^ ")"
+  | ThreeAverage(x,y,z) -> "(" ^ exprToString x ^ "+" ^ exprToString y ^ "+" ^ exprToString z ^ ")/3"
+(*| ThreeAverage(x,y,z) -> exprToString x ^ "*" ^ exprToString y ^ "*" ^ exprToString z*)
 
 
 (* uncomment after implementing exprToString
@@ -159,6 +164,8 @@ let buildCosine(e)                 = Cosine(e)
 let buildAverage(e1,e2)            = Average(e1,e2)
 let buildTimes(e1,e2)              = Times(e1,e2)
 let buildThresh(a,b,a_less,b_less) = Thresh(a,b,a_less,b_less)
+let buildIdentity(e)               = Identity(e)
+let buildThreeAverage(x,y,z)         = ThreeAverage(x,y,z)
 
 
 let pi = 4.0 *. atan 1.0
@@ -174,6 +181,8 @@ let rec eval (e,x,y) = match e with
   | Average(expr1, expr2) -> (eval (expr1,x,y) +. eval (expr2,x,y)) /. 2.0
   | Times(expr1, expr2) -> (eval (expr1,x,y)) *. (eval (expr2,x,y))
   | Thresh(a,b,c,d) -> if (eval (a,x,y)) < (eval (b,x,y)) then (eval (c,x,y)) else (eval (d,x,y))
+  | Identity(expr) -> eval (expr,x,y)
+  | ThreeAverage(expr1, expr2, expr3) -> ((eval (expr1,x,y)) +. (eval (expr2,x,y)) +. (eval (expr3,x,y))) /. 3.0
 
 
 let eval_fn e (x,y) =
@@ -227,13 +236,16 @@ let rec build (rand, depth) =
       | 1 -> buildY()
       | _ -> buildX()
   else
-    match rand (0,5) with
+    match rand (0,7) with
       | 0 -> buildSine (build (rand, depth-1))
       | 1 -> buildCosine (build (rand, depth-1))
       | 2 -> buildAverage (build (rand, depth-1), build (rand, depth-1))
       | 3 -> buildTimes (build (rand, depth-1), build (rand, depth-1))
-      | 4 -> buildThresh(build (rand, depth-1), build (rand, depth-1),
-                         build (rand, depth-1), build (rand, depth-1))
+      | 4 -> buildThresh (build (rand, depth-1), build (rand, depth-1),
+                          build (rand, depth-1), build (rand, depth-1))
+      | 5 -> buildIdentity (build (rand, depth-1))
+      | 6 -> buildThreeAverage (build (rand, depth-1), build (rand, depth-1),
+                              build (rand, depth-1))
       | _ -> buildSine (build (rand, depth-1))
 
 
@@ -243,13 +255,13 @@ let rec build (rand, depth) =
  * they should return (depth,seed1,seed2)
 *)
 
-let g1 () = (9, 1, 2)
-let g2 () = (9, 1, 3)
-let g3 () = (9, 1, 4)
+let g1 () = (8, 1, 1)
+let g2 () = (8, 2, 2)
+let g3 () = (8, 3, 3)
 
-let c1 () = (9, 1, 2)
-let c2 () = (9, 1, 3)
-let c3 () = (9, 1, 4)
+let c1 () = (8, 4, 4)
+let c2 () = (8, 5, 5)
+let c3 () = (8, 6, 6)
 
 
 (******************** Random Number Generators ************)
