@@ -33,9 +33,9 @@ let sqsum xs =
     List.fold_left f base xs
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
-let _ = sqsum []
-let _ = sqsum [1;2;3;4]
-let _ = sqsum [(-1); (-2); (-3); (-4)]
+   let _ = sqsum []
+   let _ = sqsum [1;2;3;4]
+   let _ = sqsum [(-1); (-2); (-3); (-4)]
 *)
 
 
@@ -47,11 +47,11 @@ let pipe fs =
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = pipe [] 3
+   let _ = pipe [] 3
 
-let _ = pipe [(fun x -> x+x); (fun x -> x + 3)] 3
+   let _ = pipe [(fun x -> x+x); (fun x -> x + 3)] 3
 
-let _ = pipe [(fun x -> x + 3);(fun x-> x + x)] 3
+   let _ = pipe [(fun x -> x + 3);(fun x-> x + x)] 3
 
 *)
 
@@ -67,10 +67,10 @@ let rec sepConcat sep sl = match sl with
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = sepConcat ", " ["foo";"bar";"baz"]
-let _ = sepConcat "---" []
-let _ = sepConcat "" ["a";"b";"c";"d";"e"]
-let _ = sepConcat "X" ["hello"]
+   let _ = sepConcat ", " ["foo";"bar";"baz"]
+   let _ = sepConcat "---" []
+   let _ = sepConcat "" ["a";"b";"c";"d";"e"]
+   let _ = sepConcat "X" ["hello"]
 
 *)
 
@@ -79,9 +79,9 @@ let stringOfList f l = failwith "to be implemented"
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = stringOfList string_of_int [1;2;3;4;5;6];;
-let _ = stringOfList (fun x -> x) ["foo"];;
-let _ = stringOfList (stringOfList string_of_int) [[1;2;3];[4;5];[6];[]];;
+   let _ = stringOfList string_of_int [1;2;3;4;5;6];;
+   let _ = stringOfList (fun x -> x) ["foo"];;
+   let _ = stringOfList (stringOfList string_of_int) [[1;2;3];[4;5];[6];[]];;
 
 *)
 
@@ -95,9 +95,9 @@ let rec clone x n = failwith "to be implemented"
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = clone 3 5;;
-let _ = clone "foo" 2;; 
-let _ = clone clone (-3);;
+   let _ = clone 3 5;;
+   let _ = clone "foo" 2;; 
+   let _ = clone clone (-3);;
 
 *)
 
@@ -105,8 +105,8 @@ let padZero l1 l2 = failwith "to be implemented"
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = padZero [9;9] [1;0;0;2]
-let _ = padZero [1;0;0;2] [9;9] 
+   let _ = padZero [9;9] [1;0;0;2]
+   let _ = padZero [1;0;0;2] [9;9] 
 
 *)
 
@@ -114,9 +114,9 @@ let rec removeZero l = failwith "to be implemented"
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = removeZero [0;0;0;1;0;0;2]
-let _ = removeZero [9;9]
-let _ = removeZero [0;0;0;0]
+   let _ = removeZero [0;0;0;1;0;0;2]
+   let _ = removeZero [9;9]
+   let _ = removeZero [0;0;0;0]
 
 *)
 
@@ -132,8 +132,8 @@ let bigAdd l1 l2 =
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = bigAdd [9;9] [1;0;0;2];;
-let _ = bigAdd [9;9;9;9] [9;9;9];; 
+   let _ = bigAdd [9;9] [1;0;0;2];;
+   let _ = bigAdd [9;9;9;9] [9;9;9];; 
 
 *)
 
@@ -142,7 +142,7 @@ let rec mulByDigit i l = failwith "to be implemented"
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = mulByDigit 9 [9;9;9;9]
+   let _ = mulByDigit 9 [9;9;9;9]
 
 *)
 
@@ -156,8 +156,8 @@ let bigMul l1 l2 =
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
-let _ = bigMul [9;9;9;9] [9;9;9;9]
-let _ = bigMul [9;9;9;9;9] [9;9;9;9;9] 
+   let _ = bigMul [9;9;9;9] [9;9;9;9]
+   let _ = bigMul [9;9;9;9;9] [9;9;9;9;9] 
 
 *)
 
@@ -171,28 +171,28 @@ let _ = bigMul [9;9;9;9;9] [9;9;9;9;9]
 (*******************************************************************************)
 
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (* CSE 130 PA 3. Autotester *)
 
 let key = "" (* change *)
@@ -226,17 +226,17 @@ let testTest () =
 let runTest (f,arg,out,points,name) =
   let _ = max := !max + points in
   let outs = 
-	match runWTimeout(f,arg,out,timeout) with 
-	    Pass -> (score := !score + points; "[pass]")
- 	  | Fail -> "[fail]"
-	  | ErrorCode e -> "[error: "^e^"]"  in
-  name^" "^outs^" ("^(string_of_int points)^")\n"
+    	match runWTimeout(f,arg,out,timeout) with 
+        	    Pass -> (score := !score + points; "[pass]")
+      | Fail -> "[fail]"
+      	  | ErrorCode e -> "[error: "^e^"]"  in
+    name^" "^outs^" ("^(string_of_int points)^")\n"
 
 (* explode : string -> char list *)
 let explode s = 
   let rec _exp i = 
     if i >= String.length s then [] else (s.[i])::(_exp (i+1)) in
-  _exp 0
+    _exp 0
 
 let implode cs = 
   String.concat "" (List.map (String.make 1) cs)
@@ -286,13 +286,13 @@ let runAllTests () =
 
      runTest(wrap_curried_2 bigMul,  ([9;9;9;9],[9;9;9;9]), [9;9;9;8;0;0;0;1],1, "bigMul 1");
      runTest(wrap_curried_2 bigMul,  ([9;9;9;9;9],[9;9;9;9;9]), [9;9;9;9;8;0;0;0;0;1],1,"bigMul 2");
-     ] in
+    ] in
   let s = Format.sprintf "Results: Score/Max = %d / %d \n" !score !max in
   let _ = List.iter print130 (report@([s])) in
     (!score,!max)
-      
+
 let _ = runAllTests ()
-  
+
 let _ = print130 ("Compiled"^key^"\n")
 
 
