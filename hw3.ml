@@ -75,9 +75,8 @@ let rec sepConcat sep sl = match sl with
 *)
 
 
-let stringOfList f l = failwith "to be implemented"
-
 let stringOfList f l = "[" ^ (sepConcat "; " (List.map f l)) ^ "]"
+
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
