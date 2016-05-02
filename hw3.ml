@@ -133,15 +133,17 @@ let rec removeZero l = match l with
 
 *)
 
+(*
 let bigAdd l1 l2 = 
-  let add (l1, l2) = 
-    let f a x = failwith "to be implemented" in
-    let base = failwith "to be implemented" in
-    let args = failwith "to be implemented" in
-    let (_, res) = List.fold_left f base args in
-      res
-  in 
-    removeZero (add (padZero l1 l2))
+let add (l1, l2) = 
+let f a x = failwith "to be implemented" in
+let base = failwith "to be implemented" in
+let args = failwith "to be implemented" in
+let (_, res) = List.fold_left f base args in
+res
+in 
+removeZero (add (padZero l1 l2))
+*)
 
 let bigAdd l1 l2 = 
   let add (l1, l2) = 
