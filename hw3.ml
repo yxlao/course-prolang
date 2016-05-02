@@ -143,6 +143,31 @@ let bigAdd l1 l2 =
   in 
     removeZero (add (padZero l1 l2))
 
+let bigAdd l1 l2 = 
+  let add (l1, l2) = 
+    let f a x = 
+      let (carry, pocket) = a in
+      let (x1, x2) = x in
+      let sum = carry + x1 + x2 in
+      let digit = sum mod 10 in
+      let new_carry = sum / 10 in
+      let new_pocket = digit::pocket in
+        if (List.length pocket + 1) = List.length l1 then
+          if new_carry = 0 then
+            (0, new_pocket)
+          else
+            (0, 1::(new_pocket))
+        else
+          (new_carry, new_pocket)
+    in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_, res) = List.fold_left f base args in
+      res
+  in 
+    removeZero (add (padZero l1 l2))
+
+
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
    let _ = bigAdd [9;9] [1;0;0;2];;
