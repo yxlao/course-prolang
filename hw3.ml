@@ -94,6 +94,14 @@ let stringOfList f l = "[" ^ (sepConcat "; " (List.map f l)) ^ "]"
 
 let rec clone x n = failwith "to be implemented" 
 
+let rec clone x n = 
+  if n <= 0 then []
+  else 
+    let rec helper pocket x n = match n with
+      | 0 -> pocket
+      | _ -> helper (pocket@[x]) x (n-1)
+    in helper [] x n
+
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
    let _ = clone 3 5;;
