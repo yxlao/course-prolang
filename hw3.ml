@@ -194,6 +194,19 @@ let bigMul l1 l2 =
   let (_, res) = List.fold_left f base args in
     res
 
+let bigMul l1 l2 = 
+  let f a x = 
+    let (line_index, pocket) = a in
+    let product = mulByDigit x l1 in
+    let product_paded = product @ (clone 0 line_index) in
+    let new_pocket = bigAdd pocket product_paded in
+      ((line_index + 1), new_pocket)
+  in
+  let base = (0, []) in
+  let args = List.rev l2 in
+  let (_, res) = List.fold_left f base args in
+    res
+
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
