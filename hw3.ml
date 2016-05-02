@@ -121,8 +121,6 @@ let padZero l1 l2 =
 
 *)
 
-let rec removeZero l = failwith "to be implemented"
-
 let rec removeZero l = match l with
   |[] -> []
   |h::t -> if h = 0 then removeZero t else l
