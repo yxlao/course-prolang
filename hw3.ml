@@ -177,9 +177,6 @@ let bigAdd l1 l2 =
 
 *)
 
-
-let rec mulByDigit i l = failwith "to be implemented"
-
 let rec mulByDigit i l = match i with
   | 0 -> []
   | _ -> bigAdd l (mulByDigit (i-1) l)
