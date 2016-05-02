@@ -108,7 +108,11 @@ let rec clone x n =
 
 *)
 
-let padZero l1 l2 = failwith "to be implemented"
+let padZero l1 l2 = 
+  let diff = (List.length l1) - (List.length l2) in
+    if diff < 0 then (((clone 0 (-diff))@l1), l2)
+    else if diff > 0 then (l1, ((clone 0 diff)@l2))
+    else (l1, l2)
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
