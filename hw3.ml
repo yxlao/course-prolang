@@ -40,8 +40,8 @@ let sqsum xs =
 
 
 let pipe fs = 
-  let f a x = failwith "to be implemented" in
-  let base = failwith "to be implemented" in
+  let f a x = fun t -> x (a t) in
+  let base = fun x -> x in
     List.fold_left f base fs
 
 
