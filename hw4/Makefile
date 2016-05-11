@@ -28,7 +28,7 @@ distclean: clean
 
 turnin: distclean
 	zip pa4-soln.zip *
-	turnin -c cs130f -p pa4 pa4-soln.zip
+	turnin -c cs130s -p pa4 pa4-soln.zip
 
 .SECONDARY: $(MLYS:%.mly=%.mli) $(MLYS:%.mly=%.ml) $(MLLS:%.mll=%.ml)
 
