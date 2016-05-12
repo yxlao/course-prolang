@@ -135,17 +135,15 @@ let rec eval (evn,e) = match e with
 
 (**********************     Testing Code  ******************************)
 
-(* Uncomment to test part (a) 
+(* Uncomment to test part (a) *)
 
-   let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
+let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
 
-   let e1  = Bin(Bin(Var "x",Plus,Var "y"), Minus, Bin(Var "z",Plus,Var "z1"))
+let e1  = Bin(Bin(Var "x",Plus,Var "y"), Minus, Bin(Var "z",Plus,Var "z1"))
 
-   let _   = eval (evn, e1)        (* EXPECTED: Nano.value = Int 0 *)
+let _   = eval (evn, e1)        (* EXPECTED: Nano.value = Int 0 *)
 
-   let _   = eval (evn, Var "p")   (* EXPECTED:  Exception: Nano.MLFailure "variable not bound: p". *)
-
-*)
+let _   = eval (evn, Var "p")   (* EXPECTED:  Exception: Nano.MLFailure "variable not bound: p". *)
 
 (* Uncomment to test part (b) 
 
