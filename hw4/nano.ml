@@ -25,7 +25,7 @@ type expr =
     | App of expr * expr 
     | Fun of string * expr    
     | Letrec of string * expr * expr
-                	
+
 type value =  
       Int of int		
     | Bool of bool          
@@ -92,7 +92,8 @@ and exprToString e =
         Printf.sprintf "fun %s -> %s" x (exprToString e) 
     | Letrec (x,e1,e2) -> 
         Printf.sprintf "let rec %s = %s in \n %s" 
-          x (exprToString e1) (exprToString e2) 
+          x (exprToString e1) (exprToString e2)
+    | NilExpr -> "[]"
 
 (*********************** Some helpers you might need ***********************)
 
