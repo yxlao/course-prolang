@@ -149,6 +149,8 @@ let rec eval (evn,e) = match e with
       end
   | Let (s, e1, e2) ->
       eval ((s, eval(evn, e1))::evn, e2)
+  | Letrec (s, e1, e2) ->
+      eval ((s, eval(evn, e1))::evn, e2)
   | _ -> raise (MLFailure "Invalid expr type")
 
 
