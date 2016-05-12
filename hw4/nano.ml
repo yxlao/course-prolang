@@ -151,6 +151,17 @@ let rec eval (evn,e) = match e with
       eval ((s, eval(evn, e1))::evn, e2)
   | Letrec (s, e1, e2) ->
       eval ((s, eval(evn, e1))::evn, e2)
+  | Fun (s, e1) ->
+      Closure (evn, None, s, e1)
+  | App (e1, e2) ->
+      let c = eval(evn, e1) in
+      let v = eval(evn, e2) in
+        begin
+          match c with
+            | Closure (c_evn, None, c_s, c_e) -> 
+                eval ((c_s, v)::c_evn, c_e)
+            | _ -> Nil (* need to add rec *)
+        end
   | _ -> raise (MLFailure "Invalid expr type")
 
 
@@ -185,48 +196,52 @@ let rec eval (evn,e) = match e with
 
 *)
 
-(* Uncomment to test part (c) *)
+(* Uncomment to test part (c) 
 
-let e1 = Bin(Var "x",Plus,Var "y")
+   let e1 = Bin(Var "x",Plus,Var "y")
 
-let e2 = Let("x",Const 1, Let("y", Const 2, e1)) 
+   let e2 = Let("x",Const 1, Let("y", Const 2, e1)) 
 
-let _  = eval ([], e2)          (* EXPECTED: Nano.value = Int 3 *)
+   let _  = eval ([], e2)          (* EXPECTED: Nano.value = Int 3 *)
 
-let e3 = Let("x", Const 1, 
-             Let("y", Const 2, 
-                 Let("z", e1, 
-                     Let("x", Bin(Var "x",Plus,Var "z"), 
-                         e1)
-                    )
-                )
-            )
+   let e3 = Let("x", Const 1, 
+   Let("y", Const 2, 
+   Let("z", e1, 
+   Let("x", Bin(Var "x",Plus,Var "z"), 
+   e1)
+   )
+   )
+   )
 
-let _  = eval ([],e3)           (* EXPCETED: Nano.value = Int 6 *)
+   let _  = eval ([],e3)           (* EXPCETED: Nano.value = Int 6 *)
+
+*)
 
 
-(* Uncomment to test part (d) 
+(* Uncomment to test part (d) *)
 
-   let _ = eval ([], Fun ("x",Bin(Var "x",Plus,Var "x"))) 
+let _ = eval ([], Fun ("x",Bin(Var "x",Plus,Var "x"))) 
 
-   (* EXPECTED: Nano.value = Closure ([], None, "x", Bin (Var "x", Plus, Var "x")) *)
+(* EXPECTED: Nano.value = Closure ([], None, "x", Bin (Var "x", Plus, Var "x")) *)
 
-   let _ = eval ([],App(Fun ("x",Bin(Var "x",Plus,Var "x")),Const 3));;
+let _ = eval ([],App(Fun ("x",Bin(Var "x",Plus,Var "x")),Const 3));;
 
-   (* EXPECTED: Nano.value = Int 6 *)
+(* EXPECTED: Nano.value = Int 6 *)
 
-   let e3 = Let ("h", Fun("y", Bin(Var "x", Plus, Var "y")), 
-   App(Var "f",Var "h"))
+let e3 = Let ("h", Fun("y", Bin(Var "x", Plus, Var "y")), 
+              App(Var "f",Var "h"))
 
-   let e2 = Let("x", Const 100, e3)
+let e2 = Let("x", Const 100, e3)
 
-   let e1 = Let("f",Fun("g",Let("x",Const 0,App(Var "g",Const 2))),e2) 
+let e1 = Let("f",Fun("g",Let("x",Const 0,App(Var "g",Const 2))),e2) 
 
-   let _  = eval ([], e1)        
-   (* EXPECTED: Nano.value = Int 102 *)
+let _  = eval ([], e1)        
+(* EXPECTED: Nano.value = Int 102 *)
 
-   let _ = eval ([],Letrec("f",Fun("x",Const 0),Var "f"))
-   (* EXPECTED: Nano.value = Closure ([], Some "f", "x", Const 0) *)
+(*
+
+let _ = eval ([],Letrec("f",Fun("x",Const 0),Var "f"))
+(* EXPECTED: Nano.value = Closure ([], Some "f", "x", Const 0) *)
 
 *)
 
