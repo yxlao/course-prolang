@@ -114,53 +114,70 @@ let rec eval (evn,e) = match e with
   | Const i -> Int i
   | Var s   -> lookup (s, evn)
   | Bin (e1,op,e2) ->
-      let x1 = match eval(evn, e1) with
-        | Int x -> x
-        | _ -> 0
-      in 
-      let x2 = match eval(evn, e2) with
-        | Int x -> x
-        | _ -> 0
-      in
-        begin
-          match op with
-            | Plus -> Int (x1 + x2)
-            | Minus -> Int (x1 - x2)
-            | Mul -> Int (x1 * x2)
-            | Div -> Int (x1 / x2)
-            | _ -> Nil
-        end
-  | _ -> Nil
+      begin
+        match (eval(evn, e1), eval(evn, e2)) with
+          | (Int x1, Int x2) -> 
+              begin
+                match op with
+                  | Plus -> Int (x1 + x2)
+                  | Minus -> Int (x1 - x2)
+                  | Mul -> Int (x1 * x2)
+                  | Div -> Int (x1 / x2)
+                  | Eq -> Bool (x1 = x2)
+                  | Ne -> Bool (x1 <> x2)
+                  | Lt -> Bool (x1 < x2)
+                  | Le -> Bool (x1 <= x2)
+                  | _ -> raise (MLFailure "Invalid operator for 'Int op Int'")
+              end
+          | (Bool x1, Bool x2) ->
+              begin
+                match op with
+                  | Eq -> Bool (x1 = x2)
+                  | Ne -> Bool (x1 <> x2)
+                  | And -> Bool (x1 && x2)
+                  | Or -> Bool (x1 || x2)
+                  | _ -> raise (MLFailure "Invalid operator for 'Bool op Bool'")
+              end
+          | _ -> raise (MLFailure "Invalid operands for binary ops")
+      end
+  | If (e1, e2, e3) -> 
+      begin
+        match eval(evn, e1) with
+          | Bool true -> eval(evn, e2)
+          | Bool false -> eval(evn, e3)
+          | _ -> raise (MLFailure "Invalid value for if condition")
+      end
+  | _ -> raise (MLFailure "Invalid expr type")
 
 
 (**********************     Testing Code  ******************************)
 
-(* Uncomment to test part (a) *)
-
-let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
-
-let e1  = Bin(Bin(Var "x",Plus,Var "y"), Minus, Bin(Var "z",Plus,Var "z1"))
-
-let _   = eval (evn, e1)        (* EXPECTED: Nano.value = Int 0 *)
-
-let _   = eval (evn, Var "p")   (* EXPECTED:  Exception: Nano.MLFailure "variable not bound: p". *)
-
-(* Uncomment to test part (b) 
+(* Uncomment to test part (a) 
 
    let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
 
-   let e1  = If(Bin(Var "z1",Lt,Var "x"),Bin(Var "y",Ne,Var "z"),False)
+   let e1  = Bin(Bin(Var "x",Plus,Var "y"), Minus, Bin(Var "z",Plus,Var "z1"))
 
-   let _   = eval (evn,e1)         (* EXPECTED: Nano.value = Bool true *)
+   let _   = eval (evn, e1)        (* EXPECTED: Nano.value = Int 0 *)
 
-   let e2  = If(Bin(Var "z1",Eq,Var "x"), 
-   Bin(Var "y",Le,Var "z"),
-   Bin(Var "z",Le,Var "y")
-   )
-
-   let _   = eval (evn,e2)         (* EXPECTED: Nano.value = Bool false *)
+   let _   = eval (evn, Var "p")   (* EXPECTED:  Exception: Nano.MLFailure "variable not bound: p". *)
 
 *)
+
+(* Uncomment to test part (b) *)
+
+let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
+
+let e1  = If(Bin(Var "z1",Lt,Var "x"),Bin(Var "y",Ne,Var "z"),False)
+
+let _   = eval (evn,e1)         (* EXPECTED: Nano.value = Bool true *)
+
+let e2  = If(Bin(Var "z1",Eq,Var "x"), 
+             Bin(Var "y",Le,Var "z"),
+             Bin(Var "z",Le,Var "y")
+            )
+
+let _   = eval (evn,e2)         (* EXPECTED: Nano.value = Bool false *)
 
 (* Uncomment to test part (c) 
 
