@@ -110,7 +110,28 @@ let lookup (x,evn) = match listAssoc (x,evn) with
   | Some x -> x
   | None -> raise (MLFailure (Printf.sprintf "variable not bound: %s" x))
 
-let rec eval (evn,e) = failwith "to be written"
+let rec eval (evn,e) = match e with
+  | Const i -> Int i
+  | Var s   -> lookup (s, evn)
+  | Bin (e1,op,e2) ->
+      let x1 = match eval(evn, e1) with
+        | Int x -> x
+        | _ -> 0
+      in 
+      let x2 = match eval(evn, e2) with
+        | Int x -> x
+        | _ -> 0
+      in
+        begin
+          match op with
+            | Plus -> Int (x1 + x2)
+            | Minus -> Int (x1 - x2)
+            | Mul -> Int (x1 * x2)
+            | Div -> Int (x1 / x2)
+            | _ -> Nil
+        end
+  | _ -> Nil
+
 
 (**********************     Testing Code  ******************************)
 
