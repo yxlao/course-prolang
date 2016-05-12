@@ -106,7 +106,9 @@ let listAssoc (k,l) =
 
 (*********************** Your code starts here ****************************)
 
-let lookup (x,evn) = failwith "to be written"
+let lookup (x,evn) = match listAssoc (x,evn) with
+  | Some x -> x
+  | None -> raise (MLFailure (Printf.sprintf "variable not bound: %s" x))
 
 let rec eval (evn,e) = failwith "to be written"
 
