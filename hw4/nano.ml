@@ -147,6 +147,8 @@ let rec eval (evn,e) = match e with
           | Bool false -> eval(evn, e3)
           | _ -> raise (MLFailure "Invalid value for if condition")
       end
+  | Let (s, e1, e2) ->
+      eval ((s, eval(evn, e1))::evn, e2)
   | _ -> raise (MLFailure "Invalid expr type")
 
 
@@ -164,41 +166,41 @@ let rec eval (evn,e) = match e with
 
 *)
 
-(* Uncomment to test part (b) *)
+(* Uncomment to test part (b) 
 
-let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
+   let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
 
-let e1  = If(Bin(Var "z1",Lt,Var "x"),Bin(Var "y",Ne,Var "z"),False)
+   let e1  = If(Bin(Var "z1",Lt,Var "x"),Bin(Var "y",Ne,Var "z"),False)
 
-let _   = eval (evn,e1)         (* EXPECTED: Nano.value = Bool true *)
+   let _   = eval (evn,e1)         (* EXPECTED: Nano.value = Bool true *)
 
-let e2  = If(Bin(Var "z1",Eq,Var "x"), 
-             Bin(Var "y",Le,Var "z"),
-             Bin(Var "z",Le,Var "y")
-            )
-
-let _   = eval (evn,e2)         (* EXPECTED: Nano.value = Bool false *)
-
-(* Uncomment to test part (c) 
-
-   let e1 = Bin(Var "x",Plus,Var "y")
-
-   let e2 = Let("x",Const 1, Let("y", Const 2, e1)) 
-
-   let _  = eval ([], e2)          (* EXPECTED: Nano.value = Int 3 *)
-
-   let e3 = Let("x", Const 1, 
-   Let("y", Const 2, 
-   Let("z", e1, 
-   Let("x", Bin(Var "x",Plus,Var "z"), 
-   e1)
-   )
-   )
+   let e2  = If(Bin(Var "z1",Eq,Var "x"), 
+   Bin(Var "y",Le,Var "z"),
+   Bin(Var "z",Le,Var "y")
    )
 
-   let _  = eval ([],e3)           (* EXPCETED: Nano.value = Int 6 *)
+   let _   = eval (evn,e2)         (* EXPECTED: Nano.value = Bool false *)
 
 *)
+
+(* Uncomment to test part (c) *)
+
+let e1 = Bin(Var "x",Plus,Var "y")
+
+let e2 = Let("x",Const 1, Let("y", Const 2, e1)) 
+
+let _  = eval ([], e2)          (* EXPECTED: Nano.value = Int 3 *)
+
+let e3 = Let("x", Const 1, 
+             Let("y", Const 2, 
+                 Let("z", e1, 
+                     Let("x", Bin(Var "x",Plus,Var "z"), 
+                         e1)
+                    )
+                )
+            )
+
+let _  = eval ([],e3)           (* EXPCETED: Nano.value = Int 6 *)
 
 
 (* Uncomment to test part (d) 
