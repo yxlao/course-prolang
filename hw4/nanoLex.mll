@@ -4,5 +4,10 @@
 }
 
 rule token = parse
-    eof         { EOF }
-  | _           { raise (MLFailure ("Illegal Character '"^(Lexing.lexeme lexbuf)^"'")) }
+    eof                                 { EOF }
+  | [' ' '\t' '\r' '\n']                { token lexbuf }
+  | "true"                              { TRUE }
+  | "false"                             { FALSE }
+  | ['0'-'9']+ as l                     { Num (int_of_string l) }
+  | ['A'-'z']['A'-'z' '0'-'9']* as l    { Id l }
+  | _                                   { raise (MLFailure ("Illegal Character '"^(Lexing.lexeme lexbuf)^"'")) }

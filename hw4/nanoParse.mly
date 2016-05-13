@@ -1,13 +1,15 @@
 %{
-(* See this for a tutorial on ocamlyacc 
+(* See this for a tutorial on ocamlyacc
  * http://plus.kaist.ac.kr/~shoh/ocaml/ocamllex-ocamlyacc/ocamlyacc-tutorial/ *)
-open Nano 
+open Nano
 %}
 
 %token <int> Num
+%token TRUE FALSE
+%token <string> Id
 %token EOF
 
-%start exp 
+%start exp
 %type <Nano.expr> exp
 
 %%
