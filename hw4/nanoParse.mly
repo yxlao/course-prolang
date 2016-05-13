@@ -31,9 +31,13 @@ open Nano
 
 %token LPAREN RPAREN
 
+%token LBRAC RBRAC SEMI COLONCOLON
+
 %left OR
 %left AND
 %left EQ NE LT LE
+%right COLONCOLON
+%right SEMI
 %left PLUS MINUS
 %left MUL DIV
 %left HIGH
@@ -64,8 +68,18 @@ exp_right:
   | exp NE exp                 { Bin ($1, Ne, $3) }
   | exp AND exp                { Bin ($1, And, $3) }
   | exp OR exp                 { Bin ($1, Or, $3) }
+  | exp EQ exp                 { Bin ($1, Eq, $3) }
+
+  | exp COLONCOLON exp         { Bin ($1, Cons, $3) }
+  | LBRAC RBRAC                { NilExpr }
+  | LBRAC exp RBRAC            { Bin ($2, Cons, NilExpr) }
+  | LBRAC exp_semi RBRAC       { $2 }
 
   | TRUE                       { True }
   | FALSE                      { False }
   | Num                        { Const $1 }
   | Id                         { Var $1 }
+
+exp_semi:
+  | exp SEMI exp               { Bin ($1, Cons, Bin ($3, Cons, NilExpr)) }
+  | exp SEMI exp_semi          { Bin ($1, Cons, $3) }

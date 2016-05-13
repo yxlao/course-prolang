@@ -32,6 +32,11 @@ rule token = parse
   | '('                                 { LPAREN }
   | ')'                                 { RPAREN }
 
+  | '['                                 { LBRAC }
+  | ']'                                 { RBRAC }
+  | ';'                                 { SEMI }
+  | "::"	                              { COLONCOLON }
+
   | ['0'-'9']+ as l                     { Num (int_of_string l) }
-  | ['A'-'z']['A'-'z' '0'-'9']* as l    { Id l }
+  | ['A'-'Z' 'a'-'z']['A'-'Z' 'a'-'z' '0'-'9']* as l    { Id l }
   | _                                   { raise (MLFailure ("Illegal Character '"^(Lexing.lexeme lexbuf)^"'")) }
