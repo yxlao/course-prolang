@@ -196,7 +196,6 @@ let rec eval (evn,e) = match e with
                     | _ -> Nil (* need to add rec *)
                 end
       end
-  | _ -> raise (MLFailure "Invalid expr type")
 
 
 (*
