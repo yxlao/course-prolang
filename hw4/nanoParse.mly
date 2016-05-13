@@ -14,4 +14,8 @@ open Nano
 
 %%
 
-exp: Num                        { Const $1 }
+exp:
+  | TRUE                       { True }
+  | FALSE                      { False }
+  | Num                        { Const $1 }
+  | Id                         { Var $1 }
