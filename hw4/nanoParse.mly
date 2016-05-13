@@ -40,6 +40,9 @@ exp:
   | TRUE                       { True }
   | FALSE                      { False }
 
+  | LPAREN exp RPAREN          { $2 }
+  | exp exp                    { App ($1, $2) }
+
   | LET Id EQ exp IN exp       { Let ($2, $4, $6) }
   | LET REC Id EQ exp IN exp   { Letrec ($3, $5, $7) }
   | FUN Id ARROW exp           { Fun ($2, $4) }
@@ -54,9 +57,6 @@ exp:
   | exp NE exp                 { Bin ($1, Ne, $3) }
   | exp AND exp                { Bin ($1, And, $3) }
   | exp OR exp                 { Bin ($1, Or, $3) }
-
-  | LPAREN exp RPAREN          { $2 }
-  | exp exp                    { App ($1, $2) }
 
   | Num                        { Const $1 }
   | Id                         { Var $1 }
