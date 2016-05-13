@@ -1,45 +1,45 @@
 exception MLFailure of string
 
-type binop = 
-      Plus 
-    | Minus 
-    | Mul 
-    | Div 
-    | Eq 
-    | Ne 
-    | Lt 
-    | Le 
-    | And 
-    | Or          
+type binop =
+      Plus
+    | Minus
+    | Mul
+    | Div
+    | Eq
+    | Ne
+    | Lt
+    | Le
+    | And
+    | Or
     | Cons
 
-type expr =   
-      Const of int 
-    | True   
-    | False      
+type expr =
+      Const of int
+    | True
+    | False
     | NilExpr
-    | Var of string    
-    | Bin of expr * binop * expr 
+    | Var of string
+    | Bin of expr * binop * expr
     | If  of expr * expr * expr
-    | Let of string * expr * expr 
-    | App of expr * expr 
-    | Fun of string * expr    
+    | Let of string * expr * expr
+    | App of expr * expr
+    | Fun of string * expr
     | Letrec of string * expr * expr
 
-type value =  
-      Int of int		
-    | Bool of bool          
-    | Closure of env * string option * string * expr 
-    | Nil                    
-    | Pair of value * value     
+type value =
+      Int of int
+    | Bool of bool
+    | Closure of env * string option * string * expr
+    | Nil
+    | Pair of value * value
 
 and env = (string * value) list
 
-let binopToString op = 
+let binopToString op =
   match op with
-      Plus -> "+" 
-    | Minus -> "-" 
-    | Mul -> "*" 
+      Plus -> "+"
+    | Minus -> "-"
+    | Mul -> "*"
     | Div -> "/"
     | Eq -> "="
     | Ne -> "!="
@@ -49,18 +49,18 @@ let binopToString op =
     | Or -> "||"
     | Cons -> "::"
 
-let rec valueToString v = 
-  match v with 
-      Int i -> 
+let rec valueToString v =
+  match v with
+      Int i ->
         Printf.sprintf "%d" i
-    | Bool b -> 
+    | Bool b ->
         Printf.sprintf "%b" b
-    | Closure (evn,fo,x,e) -> 
+    | Closure (evn,fo,x,e) ->
         let fs = match fo with None -> "Anon" | Some fs -> fs in
           Printf.sprintf "{%s,%s,%s,%s}" (envToString evn) fs x (exprToString e)
-    | Pair (v1,v2) -> 
-        Printf.sprintf "(%s::%s)" (valueToString v1) (valueToString v2) 
-    | Nil -> 
+    | Pair (v1,v2) ->
+        Printf.sprintf "(%s::%s)" (valueToString v1) (valueToString v2)
+    | Nil ->
         "[]"
 
 and envToString evn =
@@ -71,37 +71,37 @@ and exprToString e =
   match e with
       Const i ->
         Printf.sprintf "%d" i
-    | True -> 
-        "true" 
-    | False -> 
+    | True ->
+        "true"
+    | False ->
         "false"
-    | Var x -> 
+    | Var x ->
         x
-    | Bin (e1,op,e2) -> 
-        Printf.sprintf "%s %s %s" 
+    | Bin (e1,op,e2) ->
+        Printf.sprintf "%s %s %s"
           (exprToString e1) (binopToString op) (exprToString e2)
-    | If (e1,e2,e3) -> 
-        Printf.sprintf "if %s then %s else %s" 
+    | If (e1,e2,e3) ->
+        Printf.sprintf "if %s then %s else %s"
           (exprToString e1) (exprToString e2) (exprToString e3)
-    | Let (x,e1,e2) -> 
-        Printf.sprintf "let %s = %s in \n %s" 
-          x (exprToString e1) (exprToString e2) 
-    | App (e1,e2) -> 
+    | Let (x,e1,e2) ->
+        Printf.sprintf "let %s = %s in \n %s"
+          x (exprToString e1) (exprToString e2)
+    | App (e1,e2) ->
         Printf.sprintf "(%s %s)" (exprToString e1) (exprToString e2)
-    | Fun (x,e) -> 
-        Printf.sprintf "fun %s -> %s" x (exprToString e) 
-    | Letrec (x,e1,e2) -> 
-        Printf.sprintf "let rec %s = %s in \n %s" 
+    | Fun (x,e) ->
+        Printf.sprintf "fun %s -> %s" x (exprToString e)
+    | Letrec (x,e1,e2) ->
+        Printf.sprintf "let rec %s = %s in \n %s"
           x (exprToString e1) (exprToString e2)
     | NilExpr -> "[]"
 
 (*********************** Some helpers you might need ***********************)
 
-let rec fold f base args = 
+let rec fold f base args =
   match args with [] -> base
                 | h::t -> fold f (f(base,h)) t
 
-let listAssoc (k,l) = 
+let listAssoc (k,l) =
   fold (fun (r,(t,v)) -> if r = None && k=t then Some v else r) None l
 
 (*********************** Your code starts here ****************************)
@@ -111,13 +111,15 @@ let lookup (x,evn) = match listAssoc (x,evn) with
   | None -> raise (MLFailure (Printf.sprintf "variable not bound: %s" x))
 
 let rec eval (evn,e) = match e with
+  | True    -> Bool true
+  | False   -> Bool false
   | Const i -> Int i
   | Var s   -> lookup (s, evn)
   | NilExpr -> Nil
   | Bin (e1,op,e2) ->
       begin
         match (eval(evn, e1), eval(evn, e2)) with
-          | (Int x1, Int x2) -> 
+          | (Int x1, Int x2) ->
               begin
                 match op with
                   | Plus -> Int (x1 + x2)
@@ -147,7 +149,7 @@ let rec eval (evn,e) = match e with
               end
               (*| _ -> raise (MLFailure "Invalid operands for binary ops")*)
       end
-  | If (e1, e2, e3) -> 
+  | If (e1, e2, e3) ->
       begin
         match eval(evn, e1) with
           | Bool true -> eval(evn, e2)
@@ -157,8 +159,8 @@ let rec eval (evn,e) = match e with
   | Let (s, e1, e2) ->
       eval ((s, eval(evn, e1))::evn, e2)
   | Letrec (s, e1, e2) ->
-      begin 
-        let e1_closure = 
+      begin
+        let e1_closure =
           match e1 with
             | Fun (x, e3) -> Closure (evn, Some s, x, e3)
             | _ -> eval(evn, e1)
@@ -169,7 +171,7 @@ let rec eval (evn,e) = match e with
   | App (e1, e2) ->
       begin
         match e1 with
-          | Var "hd" -> 
+          | Var "hd" ->
               begin
                 match e2 with
                   | Bin (a, Cons, b) -> eval(evn, a)
@@ -198,13 +200,13 @@ let rec eval (evn,e) = match e with
 
 
 (*
-let Var "td" = 
+let Var "td" =
 let hd ps = match ps with
 | Bin (a, Cons, b) -> a
 | _ -> NilExpr
 
 
-let Var "tl" = 
+let Var "tl" =
 let tl ps = match ps with
 | Bin (a, Cons, b) -> b
 | _ -> NilExpr
@@ -213,7 +215,7 @@ let tl ps = match ps with
 
 (**********************     Testing Code  ******************************)
 
-(* Uncomment to test part (a) 
+(* Uncomment to test part (a)
 
    let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
 
@@ -225,7 +227,7 @@ let tl ps = match ps with
 
 *)
 
-(* Uncomment to test part (b) 
+(* Uncomment to test part (b)
 
    let evn = [("z1",Int 0);("x",Int 1);("y",Int 2);("z",Int 3);("z1",Int 4)]
 
@@ -233,7 +235,7 @@ let tl ps = match ps with
 
    let _   = eval (evn,e1)         (* EXPECTED: Nano.value = Bool true *)
 
-   let e2  = If(Bin(Var "z1",Eq,Var "x"), 
+   let e2  = If(Bin(Var "z1",Eq,Var "x"),
    Bin(Var "y",Le,Var "z"),
    Bin(Var "z",Le,Var "y")
    )
@@ -242,18 +244,18 @@ let tl ps = match ps with
 
 *)
 
-(* Uncomment to test part (c) 
+(* Uncomment to test part (c)
 
    let e1 = Bin(Var "x",Plus,Var "y")
 
-   let e2 = Let("x",Const 1, Let("y", Const 2, e1)) 
+   let e2 = Let("x",Const 1, Let("y", Const 2, e1))
 
    let _  = eval ([], e2)          (* EXPECTED: Nano.value = Int 3 *)
 
-   let e3 = Let("x", Const 1, 
-   Let("y", Const 2, 
-   Let("z", e1, 
-   Let("x", Bin(Var "x",Plus,Var "z"), 
+   let e3 = Let("x", Const 1,
+   Let("y", Const 2,
+   Let("z", e1,
+   Let("x", Bin(Var "x",Plus,Var "z"),
    e1)
    )
    )
@@ -266,7 +268,7 @@ let tl ps = match ps with
 
 (* Uncomment to test part (d) *)
 
-let _ = eval ([], Fun ("x",Bin(Var "x",Plus,Var "x"))) 
+let _ = eval ([], Fun ("x",Bin(Var "x",Plus,Var "x")))
 
 (* EXPECTED: Nano.value = Closure ([], None, "x", Bin (Var "x", Plus, Var "x")) *)
 
@@ -274,14 +276,14 @@ let _ = eval ([],App(Fun ("x",Bin(Var "x",Plus,Var "x")),Const 3));;
 
 (* EXPECTED: Nano.value = Int 6 *)
 
-let e3 = Let ("h", Fun("y", Bin(Var "x", Plus, Var "y")), 
+let e3 = Let ("h", Fun("y", Bin(Var "x", Plus, Var "y")),
               App(Var "f",Var "h"))
 
 let e2 = Let("x", Const 100, e3)
 
-let e1 = Let("f",Fun("g",Let("x",Const 0,App(Var "g",Const 2))),e2) 
+let e1 = Let("f",Fun("g",Let("x",Const 0,App(Var "g",Const 2))),e2)
 
-let _  = eval ([], e1)        
+let _  = eval ([], e1)
 (* EXPECTED: Nano.value = Int 102 *)
 
 let _ = eval ([],Letrec("f",Fun("x",Const 0),Var "f"))
@@ -290,10 +292,10 @@ let _ = eval ([],Letrec("f",Fun("x",Const 0),Var "f"))
 
 (* Uncomment to test part (e) *)
 
-let _ = eval ([], 
-              Letrec("fac", 
-                     Fun("n", If (Bin (Var "n", Eq, Const 0), 
-                                  Const 1, 
+let _ = eval ([],
+              Letrec("fac",
+                     Fun("n", If (Bin (Var "n", Eq, Const 0),
+                                  Const 1,
                                   Bin(Var "n", Mul, App(Var "fac",Bin(Var "n",Minus,Const 1))))),
                      App(Var "fac", Const 10)))
 
@@ -314,4 +316,3 @@ let _ = eval ([],App(Var "hd",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
 let _ = eval ([],App(Var "tl",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
 
 (* EXPECTED: Nano.value = Pair (Int 2, Nil) *)
-
