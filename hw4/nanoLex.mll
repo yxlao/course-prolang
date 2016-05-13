@@ -8,6 +8,15 @@ rule token = parse
   | [' ' '\t' '\r' '\n']                { token lexbuf }
   | "true"                              { TRUE }
   | "false"                             { FALSE }
+  | "let"	                              { LET }
+  | "rec"	                              { REC }
+  | '='                                 { EQ }
+  | "in"                                { IN }
+  | "fun"                               { FUN }
+  | "->"                                { ARROW }
+  | "if"                                { IF }
+  | "then"                              { THEN }
+  | "else"                              { ELSE }
   | ['0'-'9']+ as l                     { Num (int_of_string l) }
   | ['A'-'z']['A'-'z' '0'-'9']* as l    { Id l }
   | _                                   { raise (MLFailure ("Illegal Character '"^(Lexing.lexeme lexbuf)^"'")) }
