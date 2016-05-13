@@ -35,7 +35,7 @@ open Nano
 %left AND
 %left EQ NE LT LE
 %left PLUS MINUS
-%left TIMES DIVIDE
+%left MUL DIV
 
 %start exp
 %type <Nano.expr> exp
