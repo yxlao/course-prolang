@@ -113,6 +113,7 @@ let lookup (x,evn) = match listAssoc (x,evn) with
 let rec eval (evn,e) = match e with
   | Const i -> Int i
   | Var s   -> lookup (s, evn)
+  | NilExpr -> Nil
   | Bin (e1,op,e2) ->
       begin
         match (eval(evn, e1), eval(evn, e2)) with
@@ -138,7 +139,13 @@ let rec eval (evn,e) = match e with
                   | Or -> Bool (x1 || x2)
                   | _ -> raise (MLFailure "Invalid operator for 'Bool op Bool'")
               end
-          | _ -> raise (MLFailure "Invalid operands for binary ops")
+          | (v1, v2) ->
+              begin
+                match op with
+                  | Cons -> Pair (v1, v2)
+                  | _ -> raise (MLFailure "Invalid operands, cannot Cons")
+              end
+              (*| _ -> raise (MLFailure "Invalid operands for binary ops")*)
       end
   | If (e1, e2, e3) -> 
       begin
@@ -160,19 +167,49 @@ let rec eval (evn,e) = match e with
   | Fun (s, e1) ->
       Closure (evn, None, s, e1)
   | App (e1, e2) ->
-      (* let () = Printf.printf "%s\n%!" (envToString evn) in *)
-      let e1_ce = eval(evn, e1) in
-      let e2_ce = eval(evn, e2) in
-        begin
-          match e1_ce with
-            | Closure (fe, None, p, b) ->
-                eval ((p, e2_ce)::fe, b)
-            | Closure (fe, Some n, p, b) ->
-                eval ((n, e1_ce)::((p, e2_ce)::fe), b)
-            | _ -> Nil (* need to add rec *)
-        end
+      begin
+        match e1 with
+          | Var "hd" -> 
+              begin
+                match e2 with
+                  | Bin (a, Cons, b) -> eval(evn, a)
+                  | _ -> raise (MLFailure "Failure hd")
+              end
+          | Var "tl" ->
+              begin
+                match e2 with
+                  | Bin (a, Cons, b) -> eval(evn, b)
+                  | _ -> raise (MLFailure "Failure tl")
+              end
+          | _ ->
+              (* let () = Printf.printf "%s\n%!" (envToString evn) in *)
+              let e1_ce = eval(evn, e1) in
+              let e2_ce = eval(evn, e2) in
+                begin
+                  match e1_ce with
+                    | Closure (fe, None, p, b) ->
+                        eval ((p, e2_ce)::fe, b)
+                    | Closure (fe, Some n, p, b) ->
+                        eval ((n, e1_ce)::((p, e2_ce)::fe), b)
+                    | _ -> Nil (* need to add rec *)
+                end
+      end
   | _ -> raise (MLFailure "Invalid expr type")
 
+
+(*
+let Var "td" = 
+let hd ps = match ps with
+| Bin (a, Cons, b) -> a
+| _ -> NilExpr
+
+
+let Var "tl" = 
+let tl ps = match ps with
+| Bin (a, Cons, b) -> b
+| _ -> NilExpr
+
+*)
 
 (**********************     Testing Code  ******************************)
 
@@ -264,18 +301,17 @@ let _ = eval ([],
 
 
 
-(* Uncomment to test part (f)
+(* Uncomment to test part (f) *)
 
-   let _ = eval ([],Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr)))
+let _ = eval ([],Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr)))
 
-   (* EXPECTED: Nano.value = Pair (Int 1, Pair (Int 2, Nil)) *)
+(* EXPECTED: Nano.value = Pair (Int 1, Pair (Int 2, Nil)) *)
 
-   let _ = eval ([],App(Var "hd",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
+let _ = eval ([],App(Var "hd",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
 
-   (* EXPECTED: Nano.value = Int 1 *)
+(* EXPECTED: Nano.value = Int 1 *)
 
-   let _ = eval ([],App(Var "tl",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
+let _ = eval ([],App(Var "tl",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
 
-   (* EXPECTED: Nano.value = Pair (Int 2, Nil) *)
+(* EXPECTED: Nano.value = Pair (Int 2, Nil) *)
 
-*)
