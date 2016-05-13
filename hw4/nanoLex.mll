@@ -4,7 +4,8 @@
 }
 
 rule token = parse
-    eof                                 { EOF }
+  | eof                                 { EOF }
+
   | [' ' '\t' '\r' '\n']                { token lexbuf }
   | "true"                              { TRUE }
   | "false"                             { FALSE }
@@ -17,6 +18,17 @@ rule token = parse
   | "if"                                { IF }
   | "then"                              { THEN }
   | "else"                              { ELSE }
+
+  | '+'                                 { PLUS }
+  | '-'                                 { MINUS }
+  | '*'                                 { MUL }
+  | '/'                                 { DIV }
+  | '<'                                 { LT }
+  | "<=" 	                              { LE }
+  | "!=" 	                              { NE }
+  | "&&" 	                              { AND }
+  | "||" 	                              { OR }
+
   | ['0'-'9']+ as l                     { Num (int_of_string l) }
   | ['A'-'z']['A'-'z' '0'-'9']* as l    { Id l }
   | _                                   { raise (MLFailure ("Illegal Character '"^(Lexing.lexeme lexbuf)^"'")) }
