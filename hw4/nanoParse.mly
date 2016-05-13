@@ -29,7 +29,13 @@ open Nano
 %token AND
 %token OR
 
-%token LPAREN, RPAREN
+%token LPAREN RPAREN
+
+%left OR
+%left AND
+%left EQ NE LT LE
+%left PLUS MINUS
+%left TIMES DIVIDE
 
 %start exp
 %type <Nano.expr> exp
