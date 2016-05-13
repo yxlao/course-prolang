@@ -36,6 +36,7 @@ open Nano
 %left EQ NE LT LE
 %left PLUS MINUS
 %left MUL DIV
+%left HIGH
 
 %start exp
 %type <Nano.expr> exp
@@ -43,11 +44,11 @@ open Nano
 %%
 
 exp:
-  | TRUE                       { True }
-  | FALSE                      { False }
+  | exp exp_right %prec HIGH   { App ($1, $2) }
+  | exp_right                  { $1 }
 
+exp_right:
   | LPAREN exp RPAREN          { $2 }
-  | exp exp                    { App ($1, $2) }
 
   | LET Id EQ exp IN exp       { Let ($2, $4, $6) }
   | LET REC Id EQ exp IN exp   { Letrec ($3, $5, $7) }
@@ -64,5 +65,7 @@ exp:
   | exp AND exp                { Bin ($1, And, $3) }
   | exp OR exp                 { Bin ($1, Or, $3) }
 
+  | TRUE                       { True }
+  | FALSE                      { False }
   | Num                        { Const $1 }
   | Id                         { Var $1 }
