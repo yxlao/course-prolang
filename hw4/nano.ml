@@ -160,6 +160,7 @@ let rec eval (evn,e) = match e with
   | Fun (s, e1) ->
       Closure (evn, None, s, e1)
   | App (e1, e2) ->
+      (* let () = Printf.printf "%s\n%!" (envToString evn) in *)
       let e1_ce = eval(evn, e1) in
       let e2_ce = eval(evn, e2) in
         begin
