@@ -150,16 +150,24 @@ let rec eval (evn,e) = match e with
   | Let (s, e1, e2) ->
       eval ((s, eval(evn, e1))::evn, e2)
   | Letrec (s, e1, e2) ->
-      eval ((s, eval(evn, e1))::evn, e2)
+      begin 
+        let e1_closure = 
+          match e1 with
+            | Fun (x, e3) -> Closure (evn, Some s, x, e3)
+            | _ -> eval(evn, e1)
+        in eval ((s, e1_closure)::evn, e2)
+      end
   | Fun (s, e1) ->
       Closure (evn, None, s, e1)
   | App (e1, e2) ->
-      let c = eval(evn, e1) in
-      let v = eval(evn, e2) in
+      let e1_ce = eval(evn, e1) in
+      let e2_ce = eval(evn, e2) in
         begin
-          match c with
-            | Closure (c_evn, None, c_s, c_e) -> 
-                eval ((c_s, v)::c_evn, c_e)
+          match e1_ce with
+            | Closure (fe, None, p, b) ->
+                eval ((p, e2_ce)::fe, b)
+            | Closure (fe, Some n, p, b) ->
+                eval ((n, e1_ce)::((p, e2_ce)::fe), b)
             | _ -> Nil (* need to add rec *)
         end
   | _ -> raise (MLFailure "Invalid expr type")
@@ -238,25 +246,22 @@ let e1 = Let("f",Fun("g",Let("x",Const 0,App(Var "g",Const 2))),e2)
 let _  = eval ([], e1)        
 (* EXPECTED: Nano.value = Int 102 *)
 
-(*
-
 let _ = eval ([],Letrec("f",Fun("x",Const 0),Var "f"))
 (* EXPECTED: Nano.value = Closure ([], Some "f", "x", Const 0) *)
 
-*)
 
-(* Uncomment to test part (e)
+(* Uncomment to test part (e) *)
 
-   let _ = eval ([], 
-   Letrec("fac", 
-   Fun("n", If (Bin (Var "n", Eq, Const 0), 
-   Const 1, 
-   Bin(Var "n", Mul, App(Var "fac",Bin(Var "n",Minus,Const 1))))),
-   App(Var "fac", Const 10)))
+let _ = eval ([], 
+              Letrec("fac", 
+                     Fun("n", If (Bin (Var "n", Eq, Const 0), 
+                                  Const 1, 
+                                  Bin(Var "n", Mul, App(Var "fac",Bin(Var "n",Minus,Const 1))))),
+                     App(Var "fac", Const 10)))
 
-   (* EXPECTED: Nano.value = Int 3628800 *)
+(* EXPECTED: Nano.value = Int 3628800 *)
 
-*)
+
 
 (* Uncomment to test part (f)
 
