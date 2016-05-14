@@ -264,6 +264,7 @@ let tl ps = match ps with
 
 *)
 
+(*
 
 (* Uncomment to test part (d) *)
 
@@ -315,3 +316,5 @@ let _ = eval ([],App(Var "hd",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
 let _ = eval ([],App(Var "tl",Bin(Const 1,Cons,Bin(Const 2,Cons,NilExpr))))
 
 (* EXPECTED: Nano.value = Pair (Int 2, Nil) *)
+
+*)
