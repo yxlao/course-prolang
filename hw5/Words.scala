@@ -2,12 +2,16 @@ import scala.collection.immutable.HashMap
 import scala.util.matching.Regex
 import java.io.PrintWriter
 import Lines._
+import java.io.File
 
 object Words {
 
-  def apply(file: String) : Iterator[String] =  
-    sys.error("TO BE WRITTEN")
-  
+  def apply(file: String) : Iterator[String] = {
+    val f = new File(file)
+    for (word <- scala.io.Source.fromFile(f).getLines())
+      yield word.toLowerCase
+  }
+
   def groupFreq[A,B](xs: Iterator[A], f: A => B): HashMap[B, Int] = 
     sys.error("TO BE WRITTEN")
  
