@@ -13,6 +13,7 @@ object Words {
   }
 
   def groupFreq[A,B](xs: Iterator[A], f: A => B): HashMap[B, Int] = {
+    // TODO: use foldleft, getOrElse
     var mmap = HashMap[B, Int]()
     for (a <- xs) {
       val b = f(a)
@@ -30,7 +31,10 @@ object Words {
   def isEven(x: Int): String =
     if ((x % 2) == 0) { "Even" } else { "Odd" }
 
-  def sizeFreq(file: String): HashMap[Int, Int] =
+  def sizeFreq(file: String): HashMap[Int, Int] = {
+    groupFreq(Words.apply(), )
+  }
+
     sys.error("TO BE WRITTEN")
 
   def charFreq(file: String): HashMap[Char, Int] =
