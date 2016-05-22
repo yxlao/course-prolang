@@ -13,7 +13,7 @@ case class Entry ( account   : String
                  )
 
 object Entry {
-  
+
   def apply(line: String) : Entry = {
     sys.error("TO BE WRITTEN")
   }
@@ -25,18 +25,18 @@ object Crack {
   def transformReverse(w: String) : Iterator[String] = {
     sys.error("TO BE WRITTEN")
   }
-  
+
   def transformCapitalize(w: String) : Iterator[String] = {
     sys.error("TO BE WRITTEN")
   }
-  
+
   def transformDigits(w:String) : Iterator[String] = {
     sys.error("TO BE WRITTEN")
   }
 
-  def checkPassword(plain: String, enc: String) : Boolean = 
+  def checkPassword(plain: String, enc: String) : Boolean =
     Crypt.crypt(enc, plain) == enc
- 
+
   def candidateWords(file: String) =
     Words.wordsMatchingRegexp(file, new Regex("""^.{6,8}$"""))
 
@@ -45,8 +45,8 @@ object Crack {
   def apply(pwdFile: String, wordsFile: String, outFile: String) : Unit = {
     sys.error("TO BE WRITTEN")
   }
-  
-  def main(args: Array[String]) = { 
+
+  def main(args: Array[String]) = {
     println("Begin: Cracking Passwords")
     apply(args(0), args(1), args(2))
     println("Done: Cracking Passwords")
@@ -54,4 +54,3 @@ object Crack {
 }
 
 // vim: set ts=2 sw=2 et:
-
