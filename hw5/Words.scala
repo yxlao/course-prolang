@@ -41,8 +41,9 @@ object Words {
     groupFreq(chars, grouper)
   }
 
-  def wordsOfSize(file: String, size: Int) : Iterator[String] =
-   sys.error("TO BE WRITTEN")
+  def wordsOfSize(file: String, size: Int) : Iterator[String] = {
+    apply(file).filter(str => str.length == size)
+  }
 
   def wordsWithAllVowels(file: String): Iterator[String] =
     sys.error("TO BE WRITTEN")
