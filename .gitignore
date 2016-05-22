@@ -2,3 +2,4 @@
 *.class
 *.scala-devel/
 *.swp
+log
