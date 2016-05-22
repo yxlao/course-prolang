@@ -37,16 +37,18 @@ object Words {
 
   def charFreq(file: String): HashMap[Char, Int] = {
     val chars   = for (word <- apply(file); char <- word) yield char
-    val grouper = (s: Char) => s
+    val grouper = (c: Char) => c
     groupFreq(chars, grouper)
   }
 
   def wordsOfSize(file: String, size: Int) : Iterator[String] = {
-    apply(file).filter(str => str.length == size)
+    apply(file).filter(s => s.length == size)
   }
 
-  def wordsWithAllVowels(file: String): Iterator[String] =
-    sys.error("TO BE WRITTEN")
+  def wordsWithAllVowels(file: String): Iterator[String] = {
+    val vowels = List('a', 'e', 'i', 'o', 'u')
+    apply(file).filter(s => vowels.forall(c => s contains c))
+  }
 
   def wordsWithNoVowels(file: String): Iterator[String] =
     sys.error("TO BE WRITTEN")
