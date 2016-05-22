@@ -50,13 +50,14 @@ object Words {
     apply(file).filter(s => vowels.forall(c => s contains c))
   }
 
-  def wordsWithNoVowels(file: String): Iterator[String] ={
+  def wordsWithNoVowels(file: String): Iterator[String] = {
     val vowels = List('a', 'e', 'i', 'o', 'u')
     apply(file).filter(s => vowels.forall(c => !(s contains c)))
   }
 
-  def wordsMatchingRegexp(file: String, re: Regex): Iterator[String] =
-    sys.error("TO BE WRITTEN")
+  def wordsMatchingRegexp(file: String, re: Regex): Iterator[String] = {
+    apply(file).filter(s => (re findFirstIn s) != None)
+  }
 
 }
 
