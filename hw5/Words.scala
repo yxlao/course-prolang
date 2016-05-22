@@ -12,37 +12,46 @@ object Words {
       yield word.toLowerCase
   }
 
-  def groupFreq[A,B](xs: Iterator[A], f: A => B): HashMap[B, Int] = 
-    sys.error("TO BE WRITTEN")
- 
+  def groupFreq[A,B](xs: Iterator[A], f: A => B): HashMap[B, Int] = {
+    var mmap = HashMap[B, Int]()
+    for (a <- xs) {
+      val b = f(a)
+      if (mmap contains b) {
+        mmap = mmap + (b -> (mmap(b) + 1))
+      } else {
+        mmap = mmap + (b -> 1)
+      }
+    }
+    mmap
+  }
+
   val inti = List(1,21,5,39,12,7,92)
 
   def isEven(x: Int): String =
-    if ((x % 2) == 0) { "Even" } else { "Odd" } 
+    if ((x % 2) == 0) { "Even" } else { "Odd" }
 
-  def sizeFreq(file: String): HashMap[Int, Int] = 
+  def sizeFreq(file: String): HashMap[Int, Int] =
     sys.error("TO BE WRITTEN")
 
-  def charFreq(file: String): HashMap[Char, Int] = 
+  def charFreq(file: String): HashMap[Char, Int] =
   {
     val chars   = sys.error("TO BE WRITTEN")
     val grouper = sys.error("TO BE WRITTEN")
-    groupFreq(chars, grouper) 
+    groupFreq(chars, grouper)
   }
 
-  def wordsOfSize(file: String, size: Int) : Iterator[String] = 
+  def wordsOfSize(file: String, size: Int) : Iterator[String] =
    sys.error("TO BE WRITTEN")
 
-  def wordsWithAllVowels(file: String): Iterator[String] = 
+  def wordsWithAllVowels(file: String): Iterator[String] =
     sys.error("TO BE WRITTEN")
- 
-  def wordsWithNoVowels(file: String): Iterator[String] = 
+
+  def wordsWithNoVowels(file: String): Iterator[String] =
     sys.error("TO BE WRITTEN")
- 
-  def wordsMatchingRegexp(file: String, re: Regex): Iterator[String] = 
+
+  def wordsMatchingRegexp(file: String, re: Regex): Iterator[String] =
     sys.error("TO BE WRITTEN")
 
 }
 
 // vim: set ts=2 sw=2 et:
-
