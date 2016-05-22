@@ -36,8 +36,8 @@ object Words {
   }
 
   def charFreq(file: String): HashMap[Char, Int] = {
-    val chars   = sys.error("TO BE WRITTEN")
-    val grouper = sys.error("TO BE WRITTEN")
+    val chars   = for (word <- apply(file); char <- word) yield char
+    val grouper = (s: Char) => s
     groupFreq(chars, grouper)
   }
 
