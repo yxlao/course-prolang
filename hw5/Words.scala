@@ -32,13 +32,10 @@ object Words {
     if ((x % 2) == 0) { "Even" } else { "Odd" }
 
   def sizeFreq(file: String): HashMap[Int, Int] = {
-    groupFreq(Words.apply(), )
+    groupFreq[String,Int](apply(file), (s => s.length))
   }
 
-    sys.error("TO BE WRITTEN")
-
-  def charFreq(file: String): HashMap[Char, Int] =
-  {
+  def charFreq(file: String): HashMap[Char, Int] = {
     val chars   = sys.error("TO BE WRITTEN")
     val grouper = sys.error("TO BE WRITTEN")
     groupFreq(chars, grouper)
