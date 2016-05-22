@@ -23,7 +23,7 @@ object Entry {
 object Crack {
 
   def transformReverse(w: String) : Iterator[String] = {
-    sys.error("TO BE WRITTEN")
+    Iterator(w, w.reverse)
   }
 
   def transformCapitalize(w: String) : Iterator[String] = {
