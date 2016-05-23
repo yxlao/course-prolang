@@ -132,6 +132,10 @@ object Crack {
             remainingHashes = remainingHashes.filter(h => h != hash)
           }
         }
+        if (remainingHashes.isEmpty) {
+          writer.close()
+          return
+        }
       }
     }
 
