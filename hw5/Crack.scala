@@ -103,6 +103,19 @@ object Crack {
       }
     }
 
+    println("[crack transformDigits]")
+    for (a <- candidateWords(wordsFile);
+         word <- transformDigits(a).drop(1)) {
+      for (hash <- remainingHashes) {
+        if (checkPassword(word, hash)) {
+          println(hashToUser(hash) + "=" + word)
+          writer.write(hashToUser(hash) + "=" + word + "\n")
+          writer.flush()
+          remainingHashes = remainingHashes.filter(h => h != hash)
+        }
+      }
+    }
+
     // clean up
     writer.close()
   }
