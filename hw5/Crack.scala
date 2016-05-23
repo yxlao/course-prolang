@@ -74,13 +74,25 @@ object Crack {
     var hashToUser = HashMap[String, String]()
     for (t <- targets)
       hashToUser = hashToUser + (t.password -> t.account)
-    // read wordsFile
-    val words = candidateWords(wordsFile) // 6-8 digits
     // init outFile writer
     val writer = new PrintWriter(new File(outFile))
 
     // crack non-transformed
-    for (word <- words) {
+    println("[crack non-transformed]")
+    for (word <- candidateWords(wordsFile)) {
+      for (hash <- remainingHashes) {
+        if (checkPassword(word, hash)) {
+          println(hashToUser(hash) + "=" + word)
+          writer.write(hashToUser(hash) + "=" + word + "\n")
+          writer.flush()
+          remainingHashes = remainingHashes.filter(h => h != hash)
+        }
+      }
+    }
+
+    println("[crack transformReverse]")
+    for (a <- candidateWords(wordsFile);
+         word <- transformReverse(a).drop(1)) {
       for (hash <- remainingHashes) {
         if (checkPassword(word, hash)) {
           println(hashToUser(hash) + "=" + word)
