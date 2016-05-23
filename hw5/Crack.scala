@@ -50,7 +50,7 @@ object Crack {
       Iterator("")
     } else {
       val head = w(0).toString
-      val headTransforms = dict.getOrElse(head, "") + head
+      val headTransforms = head + dict.getOrElse(head, "")
       val headTransformsArray = headTransforms.toList.map(_.toString)
       val headTransformsIterator = headTransformsArray.toIterator
       for (c <- headTransformsIterator; s <- transformDigits(w.substring(1)))
