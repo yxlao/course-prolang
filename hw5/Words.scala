@@ -7,8 +7,7 @@ import java.io.File
 object Words {
 
   def apply(file: String) : Iterator[String] = {
-    val f = new File(file)
-    for (word <- scala.io.Source.fromFile(f).getLines())
+    for (word <- Lines.iterator(file))
       yield word.toLowerCase
   }
 
