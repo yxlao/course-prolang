@@ -15,7 +15,9 @@ case class Entry ( account   : String
 object Entry {
 
   def apply(line: String) : Entry = {
-    sys.error("TO BE WRITTEN")
+    val splits = line.split(":")
+    Entry (splits(0), splits(1), splits(2).toInt, splits(3).toInt,
+           splits(4), splits(5), splits(6))
   }
 
 }
