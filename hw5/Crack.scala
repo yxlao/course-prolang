@@ -89,6 +89,7 @@ object Crack {
         }
       }
     }
+    println(remainingHashes)
 
     println("[crack transformReverse]")
     for (a <- candidateWords(wordsFile);
@@ -102,6 +103,7 @@ object Crack {
         }
       }
     }
+    println(remainingHashes)
 
     println("[crack transformDigits]")
     for (a <- candidateWords(wordsFile);
@@ -115,6 +117,7 @@ object Crack {
         }
       }
     }
+    println(remainingHashes)
 
     // clean up
     writer.close()
