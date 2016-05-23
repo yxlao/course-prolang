@@ -27,7 +27,13 @@ object Crack {
   }
 
   def transformCapitalize(w: String) : Iterator[String] = {
-    sys.error("TO BE WRITTEN")
+    if (w.length == 0) {
+      Iterator("")
+    } else {
+      for (c <- Iterator(w(0).toString, w(0).toString.toUpperCase());
+           s <- transformCapitalize(w.substring(1)))
+        yield(c + s)
+    }
   }
 
   def transformDigits(w:String) : Iterator[String] = {
