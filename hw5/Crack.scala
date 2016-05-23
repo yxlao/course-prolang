@@ -119,6 +119,20 @@ object Crack {
     }
     println(remainingHashes)
 
+    println("[crack transformCapitalize]")
+    for (a <- candidateWords(wordsFile);
+         word <- transformCapitalize(a).drop(1)) {
+      for (hash <- remainingHashes) {
+        if (checkPassword(word, hash)) {
+          println(hashToUser(hash) + "=" + word)
+          writer.write(hashToUser(hash) + "=" + word + "\n")
+          writer.flush()
+          remainingHashes = remainingHashes.filter(h => h != hash)
+        }
+      }
+    }
+    println(remainingHashes)
+
     // clean up
     writer.close()
   }
