@@ -2,6 +2,7 @@ import scala.collection.immutable.HashMap
 import scala.util.matching.Regex
 import Crypt._
 import java.io.PrintWriter
+import java.io.File
 
 case class Entry ( account   : String
                  , password  : String
@@ -67,7 +68,28 @@ object Crack {
   // scala> Crack("passwd", "words", "soln.1")
   // goto> scala Crack passwd words soln.1
   def apply(pwdFile: String, wordsFile: String, outFile: String) : Unit = {
-    sys.error("TO BE WRITTEN")
+    // read pwdFile
+    val targets = Lines.list(pwdFile).map(Entry.apply)
+    var remainingHashes = for (t <- targets) yield t.password
+    var hashToUser = HashMap[String, String]()
+    for (t <- targets)
+      hashToUser = hashToUser + (t.password -> t.account)
+    // read wordsFile
+    val words = candidateWords(wordsFile) // 6-8 digits
+    // init outFile writer
+    val writer = new PrintWriter(new File(outFile))
+
+    // crack non-transformed
+    for (word <- words) {
+      for (hash <- remainingHashes) {
+        if (checkPassword(word, hash)) {
+          println(hashToUser(hash) + "=" + word)
+          writer.write(hashToUser(hash) + "=" + word + "\n")
+          writer.flush()
+          remainingHashes.filter(h => h != hash)
+        }
+      }
+    }
   }
 
   def main(args: Array[String]) = {
