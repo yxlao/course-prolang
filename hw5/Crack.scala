@@ -86,10 +86,13 @@ object Crack {
           println(hashToUser(hash) + "=" + word)
           writer.write(hashToUser(hash) + "=" + word + "\n")
           writer.flush()
-          remainingHashes.filter(h => h != hash)
+          remainingHashes = remainingHashes.filter(h => h != hash)
         }
       }
     }
+
+    // clean up
+    writer.close()
   }
 
   def main(args: Array[String]) = {
