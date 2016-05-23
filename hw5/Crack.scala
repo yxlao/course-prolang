@@ -37,8 +37,41 @@ object Crack {
   }
 
   def transformDigits(w:String) : Iterator[String] = {
-    sys.error("TO BE WRITTEN")
+    val dict = HashMap("o" -> "0",
+                       "i" -> "1",
+                       "l" -> "1",
+                       "z" -> "2",
+                       "e" -> "3",
+                       "a" -> "4",
+                       "s" -> "5",
+                       "b" -> "68",
+                       "t" -> "7",
+                       "g" -> "9",
+                       "q" -> "9",
+
+                       "O" -> "0",
+                       "I" -> "1",
+                       "L" -> "1",
+                       "Z" -> "2",
+                       "E" -> "3",
+                       "A" -> "4",
+                       "S" -> "5",
+                       "B" -> "68",
+                       "T" -> "7",
+                       "G" -> "9",
+                       "Q" -> "9")
+    if (w.length == 0) {
+      Iterator("")
+    } else {
+      val head = w(0).toString
+      val headTransforms = dict.getOrElse(head, "") + head
+      val headTransformsArray = headTransforms.toList.map(_.toString)
+      val headTransformsIterator = headTransformsArray.toIterator
+      for (c <- headTransformsIterator; s <- transformDigits(w.substring(1)))
+        yield(c + s)
+    }
   }
+
 
   def checkPassword(plain: String, enc: String) : Boolean =
     Crypt.crypt(enc, plain) == enc
