@@ -93,7 +93,7 @@ object Crack {
 
     println("[crack transformReverse]")
     for (a <- candidateWords(wordsFile);
-         word <- transformReverse(a).drop(1)) {
+         word <- transformReverse(a)) {
       for (hash <- remainingHashes) {
         if (checkPassword(word, hash)) {
           println(hashToUser(hash) + "=" + word)
@@ -107,7 +107,7 @@ object Crack {
 
     println("[crack transformDigits]")
     for (a <- candidateWords(wordsFile);
-         word <- transformDigits(a).drop(1)) {
+         word <- transformDigits(a)) {
       for (hash <- remainingHashes) {
         if (checkPassword(word, hash)) {
           println(hashToUser(hash) + "=" + word)
@@ -121,7 +121,7 @@ object Crack {
 
     println("[crack transformCapitalize]")
     for (a <- candidateWords(wordsFile);
-         word <- transformCapitalize(a).drop(1)) {
+         word <- transformCapitalize(a)) {
       for (hash <- remainingHashes) {
         if (checkPassword(word, hash)) {
           println(hashToUser(hash) + "=" + word)
