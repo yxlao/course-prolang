@@ -82,9 +82,8 @@ object Crack {
       for (w <- candidateWords(wordsFile))
         yield w
     val cracker_reverse =
-      for (a <- candidateWords(wordsFile);
-           w <- transformReverse(a))
-        yield w
+      for (a <- candidateWords(wordsFile))
+        yield a.reverse
     val cracker_digit =
       for (a <- candidateWords(wordsFile);
            w <- transformDigits(a))
@@ -93,14 +92,36 @@ object Crack {
       for (a <- candidateWords(wordsFile);
            w <- transformCapitalize(a))
         yield w
+    val cracker_reverse_digit =
+      for (a <- candidateWords(wordsFile);
+           w <- transformDigits(a.reverse))
+        yield w
+    val cracker_reverse_capital =
+      for (a <- candidateWords(wordsFile);
+           w <- transformCapitalize(a.reverse))
+        yield w
+    val cracker_digit_capital =
+      for (a <- candidateWords(wordsFile);
+           b <- transformDigits(a);
+           w <- transformCapitalize(b))
+        yield w
+    val cracker_reverse_digit_capital =
+      for (a <- candidateWords(wordsFile);
+           b <- transformDigits(a.reverse);
+           w <- transformCapitalize(b))
+        yield w
 
     val crackers = Iterator(cracker_naive,
                             cracker_reverse,
                             cracker_digit,
-                            cracker_capital)
+                            cracker_reverse_capital,
+                            cracker_capital,
+                            cracker_reverse_digit,
+                            cracker_digit_capital,
+                            cracker_reverse_digit_capital)
 
     for (cracker <- crackers) {
-      println("[new cracker]")
+      println("### new cracker applied")
       println(remainingHashes)
       for (word <- cracker) {
         for (hash <- remainingHashes) {
