@@ -78,60 +78,41 @@ object Crack {
     val writer = new PrintWriter(new File(outFile))
 
     // crack non-transformed
-    println("[crack non-transformed]")
-    for (word <- candidateWords(wordsFile)) {
-      for (hash <- remainingHashes) {
-        if (checkPassword(word, hash)) {
-          println(hashToUser(hash) + "=" + word)
-          writer.write(hashToUser(hash) + "=" + word + "\n")
-          writer.flush()
-          remainingHashes = remainingHashes.filter(h => h != hash)
-        }
-      }
-    }
-    println(remainingHashes)
+    val cracker_naive =
+      for (w <- candidateWords(wordsFile))
+        yield w
+    val cracker_reverse =
+      for (a <- candidateWords(wordsFile);
+           w <- transformReverse(a))
+        yield w
+    val cracker_digit =
+      for (a <- candidateWords(wordsFile);
+           w <- transformDigits(a))
+        yield w
+    val cracker_capital =
+      for (a <- candidateWords(wordsFile);
+           w <- transformCapitalize(a))
+        yield w
 
-    println("[crack transformReverse]")
-    for (a <- candidateWords(wordsFile);
-         word <- transformReverse(a)) {
-      for (hash <- remainingHashes) {
-        if (checkPassword(word, hash)) {
-          println(hashToUser(hash) + "=" + word)
-          writer.write(hashToUser(hash) + "=" + word + "\n")
-          writer.flush()
-          remainingHashes = remainingHashes.filter(h => h != hash)
-        }
-      }
-    }
-    println(remainingHashes)
+    val crackers = Iterator(cracker_naive,
+                            cracker_reverse,
+                            cracker_digit,
+                            cracker_capital)
 
-    println("[crack transformDigits]")
-    for (a <- candidateWords(wordsFile);
-         word <- transformDigits(a)) {
-      for (hash <- remainingHashes) {
-        if (checkPassword(word, hash)) {
-          println(hashToUser(hash) + "=" + word)
-          writer.write(hashToUser(hash) + "=" + word + "\n")
-          writer.flush()
-          remainingHashes = remainingHashes.filter(h => h != hash)
+    for (cracker <- crackers) {
+      println("[new cracker]")
+      println(remainingHashes)
+      for (word <- cracker) {
+        for (hash <- remainingHashes) {
+          if (checkPassword(word, hash)) {
+            println(hashToUser(hash) + "=" + word)
+            writer.write(hashToUser(hash) + "=" + word + "\n")
+            writer.flush()
+            remainingHashes = remainingHashes.filter(h => h != hash)
+          }
         }
       }
     }
-    println(remainingHashes)
-
-    println("[crack transformCapitalize]")
-    for (a <- candidateWords(wordsFile);
-         word <- transformCapitalize(a)) {
-      for (hash <- remainingHashes) {
-        if (checkPassword(word, hash)) {
-          println(hashToUser(hash) + "=" + word)
-          writer.write(hashToUser(hash) + "=" + word + "\n")
-          writer.flush()
-          remainingHashes = remainingHashes.filter(h => h != hash)
-        }
-      }
-    }
-    println(remainingHashes)
 
     // clean up
     writer.close()
