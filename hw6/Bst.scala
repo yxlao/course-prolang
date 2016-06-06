@@ -108,7 +108,11 @@ object BST {
     } else if (xs.length == 1) {
       Node(xs(0), Leaf (), Leaf())
     } else {
-      sys.error("TO BE DONE")
+      val xs_sorted = xs.sorted.distinct
+      val midIdx = xs_sorted.length / 2
+      val leftList = xs_sorted.slice(0, midIdx)
+      val rightList = xs_sorted.slice(midIdx + 1, xs_sorted.length)
+      Node(xs_sorted(midIdx), build(leftList), build(rightList))
     }
   }
 }
