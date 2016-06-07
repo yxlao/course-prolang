@@ -51,7 +51,17 @@ sealed abstract class BST[A <% Ordered[A]] extends AbstractSet[A]
     }
 
   def contains(x: A): Boolean =
-    sys.error("TO BE DONE: contains")
+    this match {
+      case Leaf ()        => false
+      case Node (e, l, r) =>
+        if (x == e) {
+          true
+        } else if (x < e) {
+          l.contains(x)
+        } else {
+          r.contains(x)
+        }
+    }
 
   def fold[B](f: (B, A) => B, acc: B): B =
     sys.error("TO BE DONE: fold")
