@@ -56,15 +56,23 @@ object Decorators {
     // You may add more fields here
     def apply[A, B](f: A => B) : Function1[A, B] = new Function1[A, B] {
       // You may add more fields here
-      private var cache: Map[A, B] = Map()
+      private var cache: Map[A, Either[B,Exception]] = Map()
 
       def apply (x: A): B = {
         if (!cache.contains(x)) {
           // cache += (x -> f(x))
-          val res = f(x)
-          cache += (x -> res)
+          try {
+            val res = f(x)
+            cache += (x -> Left(res))
+          } catch {
+            case e: Exception =>
+              cache += (x -> Right(e))
+          }
         }
-        cache(x)
+        cache(x) match {
+          case Left(res) => res
+          case Right(e) => throw e
+        }
       }
     }
   }
