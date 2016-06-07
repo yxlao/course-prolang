@@ -38,12 +38,21 @@ object Doc {
 
   // Should be tail-recursive
   def padBegin[A](xs: List[A], n: Int, x:A): List[A] = {
-    sys.error("TO BE DONE")
+    if (xs.length >= n) {
+      xs
+    } else {
+      // padBegin(List(x) ++ xs, n, x)
+      padBegin(x::xs, n, x)
+    }
   }
 
   // Should be tail-recursive (or not at all recursive!)
   def padEnd[A](xs: List[A], n: Int, x:A): List[A] = {
-    sys.error("TO BE DONE")
+    if (xs.length >= n) {
+      xs
+    } else {
+      xs ++ (List.fill(n - xs.length)(x))
+    }
   }
 
 }
