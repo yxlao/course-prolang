@@ -127,8 +127,41 @@ sealed abstract class BST[A <% Ordered[A]] extends AbstractSet[A]
     }
   }
 
-  def remove(x: A): BST[A] =
-    sys.error("TO BE DONE")
+  def remove(x: A): BST[A] = {
+    this match {
+      // leaf
+      case Leaf() => this
+      // no child
+      case Node(e, Leaf(), Leaf()) => {
+        if (x == e) {
+          Leaf()
+        } else {
+          this
+        }
+      }
+      // only have non-leaf left child
+      case Node(e, l, Leaf()) => {
+        if (x == e) {
+          l
+        } else {
+          Node(e, l.remove(x), Leaf())
+        }
+      }
+      // have non-leaf right child
+      case Node(e, l, r) => {
+        if (x == e) {
+          val (newE, newR) = r.removeMin
+          Node(newE, l, newR)
+        } else {
+          if (x < e) {
+            Node(e, l.remove(x), r)
+          } else {
+            Node(e, l, r.remove(x))
+          }
+        }
+      }
+    }
+  }
 
 }
 
