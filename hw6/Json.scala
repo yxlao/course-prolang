@@ -1,6 +1,6 @@
 
-class Doc(val lines: List[String]) { 
-  
+class Doc(val lines: List[String]) {
+
   def width  = lines.map(_.length).padTo(1, 0).max
   def height = lines.length
   override def toString = lines.mkString("\n")
@@ -8,18 +8,18 @@ class Doc(val lines: List[String]) {
   def widen(ls: List[String]) =
     ls.map(l => l + " " * (width - l.length))
 
-  def hcatT(that: Doc) : Doc = { 
+  def hcatT(that: Doc) : Doc = {
     sys.error("TO BE DONE")
   }
 
   def hcatB(that: Doc) : Doc = {
     sys.error("TO BE DONE")
-  } 
+  }
 
-  def vcat(that: Doc) : Doc = { 
+  def vcat(that: Doc) : Doc = {
     sys.error("TO BE DONE")
   }
-  
+
 }
 
 object Doc {
@@ -28,7 +28,7 @@ object Doc {
   def apply(xs: String*)       = new Doc(xs.toList)
   def empty : Doc              = new Doc(List())
   def vcats(ds: List[Doc]):Doc = ds.foldLeft(empty)(_.vcat(_))
-  
+
   def vcats(ds: List[Doc], start: Doc, sep: Doc, end: Doc): Doc =
     ds match {
       case Nil      => start hcatT end
@@ -41,29 +41,29 @@ object Doc {
     sys.error("TO BE DONE")
   }
 
-  // Should be tail-recursive (or not at all recursive!) 
+  // Should be tail-recursive (or not at all recursive!)
   def padEnd[A](xs: List[A], n: Int, x:A): List[A] = {
     sys.error("TO BE DONE")
   }
-  
+
 }
 
 /******************************************************************/
 /*************** The Json TypeClass *******************************/
 /******************************************************************/
 
-sealed abstract class JVal 
+sealed abstract class JVal
 case class JStr(s: String)            extends JVal
 case class JNum(n: BigDecimal)        extends JVal
 case class JObj(o: Map[String, JVal]) extends JVal
 case class JArr(a: List[JVal])        extends JVal
 
 object JVal {
-  
-  private def renderDocs(ds: List[Doc]) = 
+
+  private def renderDocs(ds: List[Doc]) =
     Doc.vcats(ds, Doc("{ "), Doc(", "), Doc(" }"))
-  
-  def render(jv: JVal) : Doc = { 
+
+  def render(jv: JVal) : Doc = {
     sys.error("TO BE DONE")
   }
 
@@ -76,14 +76,14 @@ object JVal {
 
 //http://marakana.com/s/scala_typeclasses,1117/index.html
 
-trait Json[T] { 
+trait Json[T] {
   def json(t: T): JVal
 }
 
 object JsonWriter {
-  def write(v: JVal): String = 
-    JVal.render(v).toString 
-  def write[A: Json](x: A): String = 
+  def write(v: JVal): String =
+    JVal.render(v).toString
+  def write[A: Json](x: A): String =
     write(Json.toJson(x))
 }
 
@@ -91,7 +91,7 @@ object JsonWriter {
 /*************** Creating Json Instances **************************/
 /******************************************************************/
 
-object Json { 
+object Json {
 
   def toJson[T](t: T)(implicit e: Json[T]) = e.json(t)
 
@@ -111,15 +111,15 @@ object Json {
     def json(t: (A1, A2, A3)): JVal = sys.error("TO BE DONE")
   }
 
-  implicit def listJson[A : Json] = new Json[List[A]]{ 
+  implicit def listJson[A : Json] = new Json[List[A]]{
     def json(t: List[A]): JVal = sys.error("TO BE DONE")
   }
 
-  implicit def arrJson[A : Json] = new Json[Array[A]] { 
+  implicit def arrJson[A : Json] = new Json[Array[A]] {
     def json(t: Array[A]): JVal = sys.error("TO BE DONE")
   }
 
-  implicit def mapJson[A : Json] = new Json[Map[String, A]] { 
+  implicit def mapJson[A : Json] = new Json[Map[String, A]] {
     def json(t: Map[String, A]): JVal = sys.error("TO BE DONE")
   }
 
@@ -137,11 +137,11 @@ object JsonTest {
   val tup  = (((1, (2, (3, (4, (5, "Nil")))))))
   val intl = List(("one", 1), ("two", 2), ("three", 3))
   val ints = Array(1, 2, 3, 4)
-  val mm   = Map("mon" -> 10, "tue" -> 20, "wed" -> 30) 
+  val mm   = Map("mon" -> 10, "tue" -> 20, "wed" -> 30)
   val lang = Map( "eng" -> List(("one", 1), ("two", 2), ("three", 3))
                 , "spanish" -> List(("uno", 1), ("dos", 2), ("tres", 3))
                 , "french" -> List(("un", 1) , ("deux", 2), ("trois", 3)))
-  
+
   val trip = (ints, mm, lang)
 
   lazy val jvals0 = Json.toJson(tup0)
@@ -154,11 +154,11 @@ object JsonTest {
   lazy val jvals7 = Json.toJson(lang)
   lazy val jvals8 = Json.toJson(trip)
 
-  
-  // Real JVals 
-  val jvReals = List( 
+
+  // Real JVals
+  val jvReals = List(
       JObj(Map("fst" -> JNum(1), "snd" -> JStr("cat")))
-    
+
     , JObj(Map("fst" -> JObj(Map("fst" -> JNum(1), "snd" -> JStr("cat")))
               ,"snd" -> JObj(Map("fst" -> JNum(1), "snd" -> JStr("cat")))
               ,"thd" -> JObj(Map("fst" -> JNum(1), "snd" -> JStr("cat")))))
@@ -170,7 +170,7 @@ object JsonTest {
     , JArr(List(JObj(Map("fst" -> JStr("one"), "snd" -> JNum(1)))
               , JObj(Map("fst" -> JStr("two"), "snd" -> JNum(2)))
               , JObj(Map("fst" -> JStr("three"), "snd" -> JNum(3)))))
-                  
+
     , JArr(List(JNum(1), JNum(2), JNum(3), JNum(4)))
 
     , JObj(Map("mon" -> JNum(10), "tue" -> JNum(20), "wed" -> JNum(30)))
@@ -180,7 +180,7 @@ object JsonTest {
 
     , JObj(Map("fst" -> JArr(List(JNum(1), JNum(2), JNum(3), JNum(4))), "snd" -> JObj(Map("mon" -> JNum(10), "tue" -> JNum(20), "wed" -> JNum(30))), "thd" -> JObj(Map("eng" -> JArr(List(JObj(Map("fst" -> JStr("one"), "snd" -> JNum(1))), JObj(Map("fst" -> JStr("two"), "snd" -> JNum(2))), JObj(Map("fst" -> JStr("three"), "snd" -> JNum(3))))), "spanish" -> JArr(List(JObj(Map("fst" -> JStr("uno"), "snd" -> JNum(1))), JObj(Map("fst" -> JStr("dos"), "snd" -> JNum(2))), JObj(Map("fst" -> JStr("tres"), "snd" -> JNum(3))))), "french" -> JArr(List(JObj(Map("fst" -> JStr("un"), "snd" -> JNum(1))), JObj(Map("fst" -> JStr("deux"), "snd" -> JNum(2))), JObj(Map("fst" -> JStr("trois"), "snd" -> JNum(3)))))))))
   )
-   
+
 }
 
 /*************************************************************************/
@@ -193,40 +193,40 @@ import Gen._
 import Arbitrary.arbitrary
 
 object DocProperties extends Properties("Doc") {
- 
-  def genChar: Gen[Char] = 
+
+  def genChar: Gen[Char] =
     Gen.choose(97, 122).map(_.toChar)
 
-  def genString: Gen[String] = 
+  def genString: Gen[String] =
     Gen.containerOf[List, Char](genChar).map(_.mkString(""))
-  
+
   implicit def arbDoc: Arbitrary[Doc] =
-    Arbitrary { 
-      for (ls <- Gen.containerOf[List, String](genString)) 
-      yield Doc(ls) 
+    Arbitrary {
+      for (ls <- Gen.containerOf[List, String](genString))
+      yield Doc(ls)
     }
 
-  val prop_hcatT_width = forAll((d1: Doc, d2: Doc) => 
+  val prop_hcatT_width = forAll((d1: Doc, d2: Doc) =>
     (d1 hcatT d2).width == d1.width + d2.width
   )
-  
-  val prop_hcatT_height = forAll((d1: Doc, d2: Doc) => 
+
+  val prop_hcatT_height = forAll((d1: Doc, d2: Doc) =>
     (d1 hcatT d2).height == (d1.height max d2.height)
   )
 
-  val prop_hcatB_width = forAll((d1: Doc, d2: Doc) => 
+  val prop_hcatB_width = forAll((d1: Doc, d2: Doc) =>
     (d1 hcatB d2).width == d1.width + d2.width
   )
 
-  val prop_hcatB_height = forAll((d1: Doc, d2: Doc) => 
+  val prop_hcatB_height = forAll((d1: Doc, d2: Doc) =>
     (d1 hcatB d2).height == (d1.height max d2.height)
   )
- 
-  val prop_vcat_width = forAll((d1: Doc, d2: Doc) => 
+
+  val prop_vcat_width = forAll((d1: Doc, d2: Doc) =>
     (d1 vcat d2).width == (d1.width max d2.width)
   )
 
-  val prop_vcat_height = forAll((d1: Doc, d2: Doc) => 
+  val prop_vcat_height = forAll((d1: Doc, d2: Doc) =>
     (d1 vcat d2).height == d1.height + d2.height
   )
 
@@ -240,5 +240,5 @@ object DocProperties extends Properties("Doc") {
   property("prop_vcat_width")   = prop_vcat_width
 
 
-}  
+}
 // vim: set ts=2 sw=2 et:
