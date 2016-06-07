@@ -99,9 +99,20 @@ object JVal {
     Doc.vcats(ds, Doc("{ "), Doc(", "), Doc(" }"))
 
   def render(jv: JVal) : Doc = {
-    sys.error("TO BE DONE")
-  }
+    jv match {
+      case JStr(s) => Doc("\"" + s + "\"")
+      case JNum(n) => Doc(n.toString)
+      case JObj(o) => {
+        val docs = o.map{case (k,v) => Doc(k + " : ").hcatT(render(v))}
 
+        renderDocs(docs.toList)
+      }
+      case JArr(a) => {
+        val lines = a.map(x => render(x))
+        renderDocs(lines)
+      }
+    }
+  }
 }
 
 
