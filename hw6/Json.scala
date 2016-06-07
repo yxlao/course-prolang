@@ -17,7 +17,7 @@ class Doc(val lines: List[String]) {
   }
 
   def vcat(that: Doc) : Doc = {
-    sys.error("TO BE DONE")
+    new Doc(this.lines ++ that.lines)
   }
 
 }
