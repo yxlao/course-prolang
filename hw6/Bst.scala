@@ -116,7 +116,7 @@ sealed abstract class BST[A <% Ordered[A]] extends AbstractSet[A]
       case Leaf()      => sys.error("can not removeMin from empty tree")
       case Node(e,l,r) => {
         l match {
-          case Leaf()      => (e, Leaf())
+          case Leaf()  => (e, Leaf())
           case _ => {
             val (lMin, lTree) = l.removeMin
             val newtree = Node(e, lTree, r)
