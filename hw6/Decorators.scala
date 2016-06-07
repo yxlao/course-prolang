@@ -53,10 +53,19 @@ object Decorators {
 
 
   object memo {
-      // You may add more fields here
+    // You may add more fields here
     def apply[A, B](f: A => B) : Function1[A, B] = new Function1[A, B] {
       // You may add more fields here
-      def apply (x: A): B = sys.error("TO BE DONE")
+      private var cache: Map[A, B] = Map()
+
+      def apply (x: A): B = {
+        if (!cache.contains(x)) {
+          // cache += (x -> f(x))
+          val res = f(x)
+          cache += (x -> res)
+        }
+        cache(x)
+      }
     }
   }
 
