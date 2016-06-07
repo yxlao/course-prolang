@@ -64,7 +64,13 @@ sealed abstract class BST[A <% Ordered[A]] extends AbstractSet[A]
     }
 
   def fold[B](f: (B, A) => B, acc: B): B =
-    sys.error("TO BE DONE: fold")
+    this match {
+      case Leaf() => acc
+      case Node(e, l, r) =>
+        val leftAcc = l.fold(f, acc)
+        val midAcc = f(leftAcc, e)
+        r.fold(f, midAcc)
+    }
 
   def iterator : Iterator[A] = {
     this
