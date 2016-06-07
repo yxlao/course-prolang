@@ -207,7 +207,7 @@ object BstProperties extends Properties("BST") {
 
   //Holds after "add": Fix this property
   val prop_multiset = forAll((xs: List[Int]) =>
-    BST(xs).toList == xs.sorted
+    BST(xs).toList == xs.sorted.distinct
   )
 
   //Holds after "removeMin"
