@@ -33,14 +33,20 @@ object Decorators {
         // increment level
         level += 1
         // func call
-        val result = f(x)
-        // decrement level
-        level -= 1
-        // print bottomStr
-        var bottomStr = "| " * level + "`- " + result.toString
-        println(bottomStr)
-        // return
-        result
+        try {
+          val result = f(x)
+          // decrement level
+          level -= 1
+          // print bottomStr
+          var bottomStr = "| " * level + "`- " + result.toString
+          println(bottomStr)
+          // return
+          result
+        } catch {
+          case e: Exception =>
+            level -= 1
+            throw e
+        }
       }
     }
   }
