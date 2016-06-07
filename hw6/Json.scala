@@ -9,11 +9,37 @@ class Doc(val lines: List[String]) {
     ls.map(l => l + " " * (width - l.length))
 
   def hcatT(that: Doc) : Doc = {
-    sys.error("TO BE DONE")
+    // make two list the same length
+    var leftLines = this.lines
+    var rightLines = that.lines
+    if (this.height <= that.height) {
+      leftLines = Doc.padEnd(leftLines, that.height, "")
+    } else {
+      rightLines = Doc.padEnd(rightLines, this.height, "")
+    }
+    // widen
+    leftLines = widen(leftLines)
+    // zip
+    val leftRightZipped = (leftLines,rightLines).zipped.toList
+    // create new doc
+    new Doc(leftRightZipped.map(l => l match {case (x,y) => x+y}))
   }
 
   def hcatB(that: Doc) : Doc = {
-    sys.error("TO BE DONE")
+    // make two list the same length
+    var leftLines = this.lines
+    var rightLines = that.lines
+    if (this.height <= that.height) {
+      leftLines = Doc.padBegin(leftLines, that.height, "")
+    } else {
+      rightLines = Doc.padBegin(rightLines, this.height, "")
+    }
+    // widen
+    leftLines = widen(leftLines)
+    // zip
+    val leftRightZipped = (leftLines,rightLines).zipped.toList
+    // create new doc
+    new Doc(leftRightZipped.map(l => l match {case (x,y) => x+y}))
   }
 
   def vcat(that: Doc) : Doc = {
