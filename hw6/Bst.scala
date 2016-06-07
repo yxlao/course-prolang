@@ -96,8 +96,20 @@ sealed abstract class BST[A <% Ordered[A]] extends AbstractSet[A]
   //  "BST(" + getElts.mkString(", ")  + ")"
   //}
 
-  def add(x:A): BST[A] =
-    sys.error("TO BE DONE")
+  def add(x:A): BST[A] = {
+    this match {
+      case Leaf()      => Node (x, Leaf(), Leaf())
+      case Node(e,l,r) => {
+        if (x == e) {
+          Node (e, l, r)
+        } else if (x < e) {
+          Node (e, l.add(x), r)
+        } else {
+          Node (e, l, r.add(x))
+        }
+      }
+    }
+  }
 
   def removeMin : (A, BST[A]) =
     sys.error("TO BE DONE")
