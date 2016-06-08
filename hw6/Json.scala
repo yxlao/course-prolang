@@ -160,12 +160,20 @@ object Json {
                "thd" -> Json.toJson(t._3)))
   }
 
+  // sealed abstract class JVal
+  // case class JStr(s: String)            extends JVal
+  // case class JNum(n: BigDecimal)        extends JVal
+  // case class JObj(o: Map[String, JVal]) extends JVal
+  // case class JArr(a: List[JVal])        extends JVal
+
   implicit def listJson[A : Json] = new Json[List[A]]{
-    def json(t: List[A]): JVal = sys.error("TO BE DONE")
+    def json(t: List[A]): JVal =
+      JArr(t.map(a => Json.toJson(a)))
   }
 
   implicit def arrJson[A : Json] = new Json[Array[A]] {
-    def json(t: Array[A]): JVal = sys.error("TO BE DONE")
+    def json(t: Array[A]): JVal =
+        JArr(t.map(a => Json.toJson(a)).toList)
   }
 
   implicit def mapJson[A : Json] = new Json[Map[String, A]] {
