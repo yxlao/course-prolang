@@ -154,7 +154,10 @@ object Json {
   }
 
   implicit def tuple3Json[A1 : Json, A2 : Json, A3 : Json] = new Json[(A1, A2, A3)] {
-    def json(t: (A1, A2, A3)): JVal = sys.error("TO BE DONE")
+    def json(t: (A1, A2, A3)): JVal =
+      JObj(Map("fst" -> Json.toJson(t._1),
+               "snd" -> Json.toJson(t._2),
+               "thd" -> Json.toJson(t._3)))
   }
 
   implicit def listJson[A : Json] = new Json[List[A]]{
