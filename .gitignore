@@ -1,4 +1,5 @@
 *.jpg
+*.zip
 *.class
 *.scala-devel/
 *.swp
