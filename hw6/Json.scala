@@ -173,7 +173,7 @@ object Json {
 
   implicit def arrJson[A : Json] = new Json[Array[A]] {
     def json(t: Array[A]): JVal =
-        JArr(t.map(a => Json.toJson(a)).toList)
+      JArr(t.map(a => Json.toJson(a)).toList)
   }
 
   implicit def mapJson[A : Json] = new Json[Map[String, A]] {
