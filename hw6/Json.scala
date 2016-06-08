@@ -177,7 +177,8 @@ object Json {
   }
 
   implicit def mapJson[A : Json] = new Json[Map[String, A]] {
-    def json(t: Map[String, A]): JVal = sys.error("TO BE DONE")
+    def json(t: Map[String, A]): JVal =
+      JObj(t.mapValues(Json.toJson(_)))
   }
 
 }
