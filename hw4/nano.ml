@@ -1,99 +1,99 @@
 exception MLFailure of string
 
 type binop =
-      Plus
-    | Minus
-    | Mul
-    | Div
-    | Eq
-    | Ne
-    | Lt
-    | Le
-    | And
-    | Or
-    | Cons
+    Plus
+  | Minus
+  | Mul
+  | Div
+  | Eq
+  | Ne
+  | Lt
+  | Le
+  | And
+  | Or
+  | Cons
 
 type expr =
-      Const of int
-    | True
-    | False
-    | NilExpr
-    | Var of string
-    | Bin of expr * binop * expr
-    | If  of expr * expr * expr
-    | Let of string * expr * expr
-    | App of expr * expr
-    | Fun of string * expr
-    | Letrec of string * expr * expr
+    Const of int
+  | True
+  | False
+  | NilExpr
+  | Var of string
+  | Bin of expr * binop * expr
+  | If  of expr * expr * expr
+  | Let of string * expr * expr
+  | App of expr * expr
+  | Fun of string * expr
+  | Letrec of string * expr * expr
 
 type value =
-      Int of int
-    | Bool of bool
-    | Closure of env * string option * string * expr
-    | Nil
-    | Pair of value * value
+    Int of int
+  | Bool of bool
+  | Closure of env * string option * string * expr
+  | Nil
+  | Pair of value * value
 
 and env = (string * value) list
 
 let binopToString op =
   match op with
-      Plus -> "+"
-    | Minus -> "-"
-    | Mul -> "*"
-    | Div -> "/"
-    | Eq -> "="
-    | Ne -> "!="
-    | Lt -> "<"
-    | Le -> "<="
-    | And -> "&&"
-    | Or -> "||"
-    | Cons -> "::"
+    Plus -> "+"
+  | Minus -> "-"
+  | Mul -> "*"
+  | Div -> "/"
+  | Eq -> "="
+  | Ne -> "!="
+  | Lt -> "<"
+  | Le -> "<="
+  | And -> "&&"
+  | Or -> "||"
+  | Cons -> "::"
 
 let rec valueToString v =
   match v with
-      Int i ->
-        Printf.sprintf "%d" i
-    | Bool b ->
-        Printf.sprintf "%b" b
-    | Closure (evn,fo,x,e) ->
-        let fs = match fo with None -> "Anon" | Some fs -> fs in
-          Printf.sprintf "{%s,%s,%s,%s}" (envToString evn) fs x (exprToString e)
-    | Pair (v1,v2) ->
-        Printf.sprintf "(%s::%s)" (valueToString v1) (valueToString v2)
-    | Nil ->
-        "[]"
+    Int i ->
+    Printf.sprintf "%d" i
+  | Bool b ->
+    Printf.sprintf "%b" b
+  | Closure (evn,fo,x,e) ->
+    let fs = match fo with None -> "Anon" | Some fs -> fs in
+    Printf.sprintf "{%s,%s,%s,%s}" (envToString evn) fs x (exprToString e)
+  | Pair (v1,v2) ->
+    Printf.sprintf "(%s::%s)" (valueToString v1) (valueToString v2)
+  | Nil ->
+    "[]"
 
 and envToString evn =
   let xs = List.map (fun (x,v) -> Printf.sprintf "%s:%s" x (valueToString v)) evn in
-    "["^(String.concat ";" xs)^"]"
+  "["^(String.concat ";" xs)^"]"
 
 and exprToString e =
   match e with
-      Const i ->
-        Printf.sprintf "%d" i
-    | True ->
-        "true"
-    | False ->
-        "false"
-    | Var x ->
-        x
-    | Bin (e1,op,e2) ->
-        Printf.sprintf "%s %s %s"
-          (exprToString e1) (binopToString op) (exprToString e2)
-    | If (e1,e2,e3) ->
-        Printf.sprintf "if %s then %s else %s"
-          (exprToString e1) (exprToString e2) (exprToString e3)
-    | Let (x,e1,e2) ->
-        Printf.sprintf "let %s = %s in \n %s"
-          x (exprToString e1) (exprToString e2)
-    | App (e1,e2) ->
-        Printf.sprintf "(%s %s)" (exprToString e1) (exprToString e2)
-    | Fun (x,e) ->
-        Printf.sprintf "fun %s -> %s" x (exprToString e)
-    | Letrec (x,e1,e2) ->
-        Printf.sprintf "let rec %s = %s in \n %s"
-          x (exprToString e1) (exprToString e2)
-    | NilExpr -> "[]"
+    Const i ->
+    Printf.sprintf "%d" i
+  | True ->
+    "true"
+  | False ->
+    "false"
+  | Var x ->
+    x
+  | Bin (e1,op,e2) ->
+    Printf.sprintf "%s %s %s"
+      (exprToString e1) (binopToString op) (exprToString e2)
+  | If (e1,e2,e3) ->
+    Printf.sprintf "if %s then %s else %s"
+      (exprToString e1) (exprToString e2) (exprToString e3)
+  | Let (x,e1,e2) ->
+    Printf.sprintf "let %s = %s in \n %s"
+      x (exprToString e1) (exprToString e2)
+  | App (e1,e2) ->
+    Printf.sprintf "(%s %s)" (exprToString e1) (exprToString e2)
+  | Fun (x,e) ->
+    Printf.sprintf "fun %s -> %s" x (exprToString e)
+  | Letrec (x,e1,e2) ->
+    Printf.sprintf "let rec %s = %s in \n %s"
+      x (exprToString e1) (exprToString e2)
+  | NilExpr -> "[]"
 
 (*********************** Some helpers you might need ***********************)
 
@@ -117,93 +117,91 @@ let rec eval (evn,e) = match e with
   | Var s   -> lookup (s, evn)
   | NilExpr -> Nil
   | Bin (e1,op,e2) ->
-      begin
-        match (eval(evn, e1), eval(evn, e2)) with
-          | (Int x1, Int x2) ->
-              begin
-                match op with
-                  | Plus -> Int (x1 + x2)
-                  | Minus -> Int (x1 - x2)
-                  | Mul -> Int (x1 * x2)
-                  | Div -> Int (x1 / x2)
-                  | Eq -> Bool (x1 = x2)
-                  | Ne -> Bool (x1 <> x2)
-                  | Lt -> Bool (x1 < x2)
-                  | Le -> Bool (x1 <= x2)
-                  | _ -> raise (MLFailure "Invalid operator for 'Int op Int'")
-              end
-          | (Bool x1, Bool x2) ->
-              begin
-                match op with
-                  | Eq -> Bool (x1 = x2)
-                  | Ne -> Bool (x1 <> x2)
-                  | And -> Bool (x1 && x2)
-                  | Or -> Bool (x1 || x2)
-                  | _ -> raise (MLFailure "Invalid operator for 'Bool op Bool'")
-              end
-          | (v1, v2) ->
-              begin
-                match op with
-                  | Cons -> Pair (v1, v2)
-                  | _ -> raise (MLFailure "Invalid operands, cannot Cons")
-              end
-              (*| _ -> raise (MLFailure "Invalid operands for binary ops")*)
-      end
+    begin
+      match (eval(evn, e1), eval(evn, e2)) with
+      | (Int x1, Int x2) ->
+        begin
+          match op with
+          | Plus -> Int (x1 + x2)
+          | Minus -> Int (x1 - x2)
+          | Mul -> Int (x1 * x2)
+          | Div -> Int (x1 / x2)
+          | Eq -> Bool (x1 = x2)
+          | Ne -> Bool (x1 <> x2)
+          | Lt -> Bool (x1 < x2)
+          | Le -> Bool (x1 <= x2)
+          | _ -> raise (MLFailure "Invalid operator for 'Int op Int'")
+        end
+      | (Bool x1, Bool x2) ->
+        begin
+          match op with
+          | Eq -> Bool (x1 = x2)
+          | Ne -> Bool (x1 <> x2)
+          | And -> Bool (x1 && x2)
+          | Or -> Bool (x1 || x2)
+          | _ -> raise (MLFailure "Invalid operator for 'Bool op Bool'")
+        end
+      | (v1, v2) ->
+        begin
+          match op with
+          | Cons -> Pair (v1, v2)
+          | _ -> raise (MLFailure "Invalid operands, cannot Cons")
+        end
+        (*| _ -> raise (MLFailure "Invalid operands for binary ops")*)
+    end
   | If (e1, e2, e3) ->
-      begin
-        match eval(evn, e1) with
-          | Bool true -> eval(evn, e2)
-          | Bool false -> eval(evn, e3)
-          | _ -> raise (MLFailure "Invalid value for if condition")
-      end
+    begin
+      match eval(evn, e1) with
+      | Bool true -> eval(evn, e2)
+      | Bool false -> eval(evn, e3)
+      | _ -> raise (MLFailure "Invalid value for if condition")
+    end
   | Let (s, e1, e2) ->
-      eval ((s, eval(evn, e1))::evn, e2)
+    eval ((s, eval(evn, e1))::evn, e2)
   | Letrec (s, e1, e2) ->
-      begin
-        let e1_closure =
-          match e1 with
-            | Fun (x, e3) -> Closure (evn, Some s, x, e3)
-            | _ -> eval(evn, e1)
-        in eval ((s, e1_closure)::evn, e2)
-      end
-  | Fun (s, e1) ->
-      Closure (evn, None, s, e1)
-  | App (e1, e2) ->
-      begin
+    begin
+      let e1_closure =
         match e1 with
-          | Var "hd" ->
-              begin
-                match e2 with
-                  | Bin (a, Cons, b) -> eval(evn, a)
-                  | _ -> raise (MLFailure "Failure hd")
-              end
-          | Var "tl" ->
-              begin
-                match e2 with
-                  | Bin (a, Cons, b) -> eval(evn, b)
-                  | _ -> raise (MLFailure "Failure tl")
-              end
-          | _ ->
-              (* let () = Printf.printf "%s\n%!" (envToString evn) in *)
-              let e1_ce = eval(evn, e1) in
-              let e2_ce = eval(evn, e2) in
-                begin
-                  match e1_ce with
-                    | Closure (fe, None, p, b) ->
-                        eval ((p, e2_ce)::fe, b)
-                    | Closure (fe, Some n, p, b) ->
-                        eval ((n, e1_ce)::((p, e2_ce)::fe), b)
-                    | _ -> Nil (* need to add rec *)
-                end
-      end
-
+        | Fun (x, e3) -> Closure (evn, Some s, x, e3)
+        | _ -> eval(evn, e1)
+      in eval ((s, e1_closure)::evn, e2)
+    end
+  | Fun (s, e1) ->
+    Closure (evn, None, s, e1)
+  | App (e1, e2) ->
+    begin
+      match e1 with
+      | Var "hd" ->
+        begin
+          match e2 with
+          | Bin (a, Cons, b) -> eval(evn, a)
+          | _ -> raise (MLFailure "Failure hd")
+        end
+      | Var "tl" ->
+        begin
+          match e2 with
+          | Bin (a, Cons, b) -> eval(evn, b)
+          | _ -> raise (MLFailure "Failure tl")
+        end
+      | _ ->
+        (* let () = Printf.printf "%s\n%!" (envToString evn) in *)
+        let e1_ce = eval(evn, e1) in
+        let e2_ce = eval(evn, e2) in
+        begin
+          match e1_ce with
+          | Closure (fe, None, p, b) ->
+            eval ((p, e2_ce)::fe, b)
+          | Closure (fe, Some n, p, b) ->
+            eval ((n, e1_ce)::((p, e2_ce)::fe), b)
+          | _ -> Nil (* need to add rec *)
+        end
+    end
 
 (*
 let Var "td" =
 let hd ps = match ps with
 | Bin (a, Cons, b) -> a
 | _ -> NilExpr
-
 
 let Var "tl" =
 let tl ps = match ps with
@@ -289,7 +287,6 @@ let _  = eval ([], e1)
 let _ = eval ([],Letrec("f",Fun("x",Const 0),Var "f"))
 (* EXPECTED: Nano.value = Closure ([], Some "f", "x", Const 0) *)
 
-
 (* Uncomment to test part (e) *)
 
 let _ = eval ([],
@@ -300,8 +297,6 @@ let _ = eval ([],
                      App(Var "fac", Const 10)))
 
 (* EXPECTED: Nano.value = Int 3628800 *)
-
-
 
 (* Uncomment to test part (f) *)
 

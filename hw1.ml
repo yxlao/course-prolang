@@ -31,7 +31,6 @@ let rec digitsOfInt n = match n <= 0 with
 
 *)
 
-
 (* digits : int -> int list
  * (digits n) is the list of digits of n in the order in which they appear
  * in n
@@ -40,7 +39,6 @@ let rec digitsOfInt n = match n <= 0 with
 *)
 
 let digits n = digitsOfInt (abs n)
-
 
 (* From http://mathworld.wolfram.com/AdditivePersistence.html
  * Consider the process of taking a number, adding its digits,
@@ -54,7 +52,6 @@ let digits n = digitsOfInt (abs n)
  *
  * NOTE: assume that additivePersistence is only called with positive numbers
 *)
-
 
 let rec additivePersistence n = match n < 10 with
   | true -> 0
@@ -78,7 +75,6 @@ let rec digitalRoot n = match n < 10 with
 
 *)
 
-
 let rec listReverse l = match l with
   | []     -> []
   | (h::t) -> (listReverse t) @ [h]
@@ -101,7 +97,7 @@ let explode s =
     then []
     else (s.[i]) :: (go (i+1))
   in
-    go 0
+  go 0
 
 let palindrome w =
   let ws = explode w in
@@ -112,7 +108,7 @@ let palindrome w =
     | (_, [])  -> false
     | (xh::xt, yh::yt) -> xh = yh && isSameList xt yt
   in
-    isSameList ws rev_ws
+  isSameList ws rev_ws
 
 (* uncomment and run AFTER you have implemented digitalRoot
 
@@ -120,26 +116,6 @@ let palindrome w =
    let _ = palindrome "myxomatosis"
 
 *)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 (*130*************************************************************)
 (*130**** DO NOT MODIFY ANY CODE AFTER THIS **********************)
@@ -171,19 +147,19 @@ let testTest () =
   let testBad x = 0 in
   let testException x = raise TestException in
   let rec testTimeout x = testTimeout x in
-    runWTimeout(testGood,0,1,5) = Pass &&
-    runWTimeout(testBad,0,1,5) = Fail &&
-    runWTimeout(testException,0,1,5) = ErrorCode "exception" &&
-    runWTimeout(testTimeout,0,1,5) = ErrorCode "timeout"
+  runWTimeout(testGood,0,1,5) = Pass &&
+  runWTimeout(testBad,0,1,5) = Fail &&
+  runWTimeout(testException,0,1,5) = ErrorCode "exception" &&
+  runWTimeout(testTimeout,0,1,5) = ErrorCode "timeout"
 
 let runTest ((f,arg,out),points,name) =
   let _   = max := !max + points in
   let outs =
     match runWTimeout(f,arg,out,timeout) with
-        Pass -> (score := !score + points; "[pass]")
-      | Fail -> "[fail]"
-      | ErrorCode e -> "[error: "^e^"]"  in
-    name^" "^outs^" ("^(string_of_int points)^")\n"
+      Pass -> (score := !score + points; "[pass]")
+    | Fail -> "[fail]"
+    | ErrorCode e -> "[error: "^e^"]"  in
+  name^" "^outs^" ("^(string_of_int points)^")\n"
 
 let mkTest f x y name = runTest ((f, x, y), 1, name)
 
@@ -204,106 +180,106 @@ let doTest f =
 let sampleTests =
   [
     (fun () -> mkTest
-                 sumList
-                 [1;2;3;4]
-                 10
-                 "sample: sumList 1"
+        sumList
+        [1;2;3;4]
+        10
+        "sample: sumList 1"
     );
     (fun () -> mkTest
-                 sumList
-                 [1;-2;3;5]
-                 7
-                 "sample: sumList 2"
+        sumList
+        [1;-2;3;5]
+        7
+        "sample: sumList 2"
     );
     (fun () -> mkTest
-                 sumList
-                 [1;3;5;7;9;11]
-                 36
-                 "sample: sumList 3"
+        sumList
+        [1;3;5;7;9;11]
+        36
+        "sample: sumList 3"
     );
     (fun () -> mkTest
-                 sumList
-                 []
-                 0
-                 "sample: sumList 4"
+        sumList
+        []
+        0
+        "sample: sumList 4"
     );
     (fun () -> mkTest
-                 sumList
-                 [(-1)]
-                 (-1)
-                 "sample: sumList 5"
+        sumList
+        [(-1)]
+        (-1)
+        "sample: sumList 5"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 3124
-                 [3;1;2;4]
-                 "sample: digitsOfInt 1"
+        digitsOfInt
+        3124
+        [3;1;2;4]
+        "sample: digitsOfInt 1"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 352663
-                 [3;5;2;6;6;3]
-                 "sample: digitsOfInt 2"
+        digitsOfInt
+        352663
+        [3;5;2;6;6;3]
+        "sample: digitsOfInt 2"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 0
-                 []
-                 "sample: digitsOfInt 3"
+        digitsOfInt
+        0
+        []
+        "sample: digitsOfInt 3"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 (-1)
-                 []
-                 "sample: digitsOfInt 4"
+        digitsOfInt
+        (-1)
+        []
+        "sample: digitsOfInt 4"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 (-123)
-                 []
-                 "sample: digitsOfInt 5"
+        digitsOfInt
+        (-123)
+        []
+        "sample: digitsOfInt 5"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 1
-                 [1]
-                 "sample: digitsOfInt 6"
+        digitsOfInt
+        1
+        [1]
+        "sample: digitsOfInt 6"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 5
-                 [5]
-                 "sample: digitsOfInt 7"
+        digitsOfInt
+        5
+        [5]
+        "sample: digitsOfInt 7"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 12
-                 [1;2]
-                 "sample: digitsOfInt 8"
+        digitsOfInt
+        12
+        [1;2]
+        "sample: digitsOfInt 8"
     );
     (fun () -> mkTest
-                 digitsOfInt
-                 987654321
-                 [9;8;7;6;5;4;3;2;1]
-                 "sample: digitsOfInt 9"
+        digitsOfInt
+        987654321
+        [9;8;7;6;5;4;3;2;1]
+        "sample: digitsOfInt 9"
     );
     (fun () -> mkTest
-                 digits
-                 31243
-                 [3;1;2;4;3]
-                 "sample: digits 1"
+        digits
+        31243
+        [3;1;2;4;3]
+        "sample: digits 1"
     );
     (fun () -> mkTest
-                 digits
-                 (-23422)
-                 [2;3;4;2;2]
-                 "sample: digits 2"
+        digits
+        (-23422)
+        [2;3;4;2;2]
+        "sample: digits 2"
     );
     (fun () -> mkTest
-                 digits
-                 (-1)
-                 [1]
-                 "sample: digits 3"
+        digits
+        (-1)
+        [1]
+        "sample: digits 3"
     );
     (* (fun () -> mkTest
        digits
@@ -312,152 +288,152 @@ let sampleTests =
        "sample: digits 4"
        ); *)
     (fun () -> mkTest
-                 additivePersistence
-                 9876
-                 2
-                 "sample: additivePersistence1"
+        additivePersistence
+        9876
+        2
+        "sample: additivePersistence1"
     );
     (fun () -> mkTest
-                 additivePersistence
-                 1
-                 0
-                 "sample: additivePersistence2"
+        additivePersistence
+        1
+        0
+        "sample: additivePersistence2"
     );
     (fun () -> mkTest
-                 additivePersistence
-                 9
-                 0
-                 "sample: additivePersistence3"
+        additivePersistence
+        9
+        0
+        "sample: additivePersistence3"
     );
     (fun () -> mkTest
-                 additivePersistence
-                 10
-                 1
-                 "sample: additivePersistence4"
+        additivePersistence
+        10
+        1
+        "sample: additivePersistence4"
     );
     (fun () -> mkTest
-                 additivePersistence
-                 987654321
-                 2
-                 "sample: additivePersistence5"
+        additivePersistence
+        987654321
+        2
+        "sample: additivePersistence5"
     );
     (fun () -> mkTest
-                 additivePersistence
-                 91987654321
-                 3
-                 "sample: additivePersistence6"
+        additivePersistence
+        91987654321
+        3
+        "sample: additivePersistence6"
     );
     (fun () -> mkTest
-                 digitalRoot
-                 9876
-                 3
-                 "sample: digitalRoot"
+        digitalRoot
+        9876
+        3
+        "sample: digitalRoot"
     );
     (fun () -> mkTest
-                 digitalRoot
-                 1
-                 1
-                 "sample: digitalRoot"
+        digitalRoot
+        1
+        1
+        "sample: digitalRoot"
     );
     (fun () -> mkTest
-                 digitalRoot
-                 9
-                 9
-                 "sample: digitalRoot"
+        digitalRoot
+        9
+        9
+        "sample: digitalRoot"
     );
     (fun () -> mkTest
-                 digitalRoot
-                 10
-                 1
-                 "sample: digitalRoot"
+        digitalRoot
+        10
+        1
+        "sample: digitalRoot"
     );
     (fun () -> mkTest
-                 digitalRoot
-                 20
-                 2
-                 "sample: digitalRoot"
+        digitalRoot
+        20
+        2
+        "sample: digitalRoot"
     );
     (fun () -> mkTest
-                 digitalRoot
-                 987654321
-                 9
-                 "sample: digitalRoot"
+        digitalRoot
+        987654321
+        9
+        "sample: digitalRoot"
     );
     (fun () -> mkTest
-                 listReverse
-                 [1;2;3;4]
-                 [4;3;2;1]
-                 "sample: reverse 1"
+        listReverse
+        [1;2;3;4]
+        [4;3;2;1]
+        "sample: reverse 1"
     );
     (fun () -> mkTest
-                 listReverse
-                 ["a";"b";"c";"d"]
-                 ["d";"c";"b";"a"]
-                 "sample: rev 2"
+        listReverse
+        ["a";"b";"c";"d"]
+        ["d";"c";"b";"a"]
+        "sample: rev 2"
     );
     (fun () -> mkTest
-                 listReverse
-                 []
-                 []
-                 "sample: reverse 3"
+        listReverse
+        []
+        []
+        "sample: reverse 3"
     );
     (fun () -> mkTest
-                 listReverse
-                 [1]
-                 [1]
-                 "sample: reverse 4"
+        listReverse
+        [1]
+        [1]
+        "sample: reverse 4"
     );
     (fun () -> mkTest
-                 listReverse
-                 [1;2;3]
-                 [3;2;1]
-                 "sample: reverse 5"
+        listReverse
+        [1;2;3]
+        [3;2;1]
+        "sample: reverse 5"
     );
     (fun () -> mkTest
-                 palindrome
-                 "malayalam"
-                 true
-                 "sample: palindrome 1"
+        palindrome
+        "malayalam"
+        true
+        "sample: palindrome 1"
     );
     (fun () -> mkTest
-                 palindrome
-                 "myxomatosis"
-                 false
-                 "sample: palindrome 2"
+        palindrome
+        "myxomatosis"
+        false
+        "sample: palindrome 2"
     );
     (fun () -> mkTest
-                 palindrome
-                 "a"
-                 true
-                 "sample: palindrome 3"
+        palindrome
+        "a"
+        true
+        "sample: palindrome 3"
     );
     (fun () -> mkTest
-                 palindrome
-                 ""
-                 true
-                 "sample: palindrome 4"
+        palindrome
+        ""
+        true
+        "sample: palindrome 4"
     );
     (fun () -> mkTest
-                 palindrome
-                 "ab"
-                 false
-                 "sample: palindrome 5"
+        palindrome
+        "ab"
+        false
+        "sample: palindrome 5"
     );
     (fun () -> mkTest
-                 palindrome
-                 "aba"
-                 true
-                 "sample: palindrome 6"
+        palindrome
+        "aba"
+        true
+        "sample: palindrome 6"
     );
     (fun () -> mkTest
-                 palindrome
-                 "abba"
-                 true
-                 "sample: palindrome 7"
+        palindrome
+        "abba"
+        true
+        "sample: palindrome 7"
     )]
 
 let _ =
   let report = List.map doTest (sampleTests) in
   let _ = List.iter print130 (report@([scoreMsg()])) in
   let _ = print130 ("Compiled\n") in
-    (!score, !max)
+  (!score, !max)

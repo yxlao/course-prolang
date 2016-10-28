@@ -15,22 +15,18 @@
    documentation.
 *)
 
-
-
 (* Do not change the skeleton code! The point of this assignment is to figure
  * out how the functions can be written this way (using fold). You may only
  * replace the   failwith "to be implemented"   part. *)
-
-
 
 (*****************************************************************)
 (******************* 1. Warm Up   ********************************)
 (*****************************************************************)
 
-let sqsum xs = 
+let sqsum xs =
   let f a x = a + x * x in
   let base = 0 in
-    List.fold_left f base xs
+  List.fold_left f base xs
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
    let _ = sqsum []
@@ -38,12 +34,10 @@ let sqsum xs =
    let _ = sqsum [(-1); (-2); (-3); (-4)]
 *)
 
-
-let pipe fs = 
+let pipe fs =
   let f a x = fun t -> x (a t) in
   let base = fun x -> x in
-    List.fold_left f base fs
-
+  List.fold_left f base fs
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
@@ -55,15 +49,13 @@ let pipe fs =
 
 *)
 
-
-let rec sepConcat sep sl = match sl with 
+let rec sepConcat sep sl = match sl with
   | [] -> ""
-  | h :: t -> 
-      let f a x = a ^ sep ^ x in
-      let base = h in
-      let l = t in
-        List.fold_left f base l
-
+  | h :: t ->
+    let f a x = a ^ sep ^ x in
+    let base = h in
+    let l = t in
+    List.fold_left f base l
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
@@ -74,9 +66,7 @@ let rec sepConcat sep sl = match sl with
 
 *)
 
-
 let stringOfList f l = "[" ^ (sepConcat "; " (List.map f l)) ^ "]"
-
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
@@ -86,15 +76,13 @@ let stringOfList f l = "[" ^ (sepConcat "; " (List.map f l)) ^ "]"
 
 *)
 
-
-
 (*****************************************************************)
 (******************* 2. Big Numbers ******************************)
 (*****************************************************************)
 
-let rec clone x n = 
+let rec clone x n =
   if n <= 0 then []
-  else 
+  else
     let rec helper pocket x n = match n with
       | 0 -> pocket
       | _ -> helper (pocket@[x]) x (n-1)
@@ -103,21 +91,21 @@ let rec clone x n =
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
    let _ = clone 3 5;;
-   let _ = clone "foo" 2;; 
+   let _ = clone "foo" 2;;
    let _ = clone clone (-3);;
 
 *)
 
-let padZero l1 l2 = 
+let padZero l1 l2 =
   let diff = (List.length l1) - (List.length l2) in
-    if diff < 0 then (((clone 0 (-diff))@l1), l2)
-    else if diff > 0 then (l1, ((clone 0 diff)@l2))
-    else (l1, l2)
+  if diff < 0 then (((clone 0 (-diff))@l1), l2)
+  else if diff > 0 then (l1, ((clone 0 diff)@l2))
+  else (l1, l2)
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
    let _ = padZero [9;9] [1;0;0;2]
-   let _ = padZero [1;0;0;2] [9;9] 
+   let _ = padZero [1;0;0;2] [9;9]
 
 *)
 
@@ -134,46 +122,45 @@ let rec removeZero l = match l with
 *)
 
 (*
-let bigAdd l1 l2 = 
-let add (l1, l2) = 
+let bigAdd l1 l2 =
+let add (l1, l2) =
 let f a x = failwith "to be implemented" in
 let base = failwith "to be implemented" in
 let args = failwith "to be implemented" in
 let (_, res) = List.fold_left f base args in
 res
-in 
+in
 removeZero (add (padZero l1 l2))
 *)
 
-let bigAdd l1 l2 = 
-  let add (l1, l2) = 
-    let f a x = 
+let bigAdd l1 l2 =
+  let add (l1, l2) =
+    let f a x =
       let (carry, pocket) = a in
       let (x1, x2) = x in
       let sum = carry + x1 + x2 in
       let digit = sum mod 10 in
       let new_carry = sum / 10 in
       let new_pocket = digit::pocket in
-        if (List.length pocket + 1) = List.length l1 then
-          if new_carry = 0 then
-            (0, new_pocket)
-          else
-            (0, 1::(new_pocket))
+      if (List.length pocket + 1) = List.length l1 then
+        if new_carry = 0 then
+          (0, new_pocket)
         else
-          (new_carry, new_pocket)
+          (0, 1::(new_pocket))
+      else
+        (new_carry, new_pocket)
     in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_, res) = List.fold_left f base args in
-      res
-  in 
-    removeZero (add (padZero l1 l2))
-
+    res
+  in
+  removeZero (add (padZero l1 l2))
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
    let _ = bigAdd [9;9] [1;0;0;2];;
-   let _ = bigAdd [9;9;9;9] [9;9;9];; 
+   let _ = bigAdd [9;9;9;9] [9;9;9];;
 
 *)
 
@@ -187,64 +174,36 @@ let rec mulByDigit i l = match i with
 
 *)
 
-let bigMul l1 l2 = 
+let bigMul l1 l2 =
   let f a x = failwith "to be implemented" in
   let base = failwith "to be implemented" in
   let args = failwith "to be implemented" in
   let (_, res) = List.fold_left f base args in
-    res
+  res
 
-let bigMul l1 l2 = 
-  let f a x = 
+let bigMul l1 l2 =
+  let f a x =
     let (line_index, pocket) = a in
     let product = mulByDigit x l1 in
     let product_paded = product @ (clone 0 line_index) in
     let new_pocket = bigAdd pocket product_paded in
-      ((line_index + 1), new_pocket)
+    ((line_index + 1), new_pocket)
   in
   let base = (0, []) in
   let args = List.rev l2 in
   let (_, res) = List.fold_left f base args in
-    res
-
+  res
 
 (* UNCOMMENT AFTER IMPLEMENTING THE ABOVE
 
    let _ = bigMul [9;9;9;9] [9;9;9;9]
-   let _ = bigMul [9;9;9;9;9] [9;9;9;9;9] 
+   let _ = bigMul [9;9;9;9;9] [9;9;9;9;9]
 
 *)
-
-
-
-
-
 
 (*******************************************************************************)
 (******************** DO NOT MODIFY ANYTHING AFTER THIS ************************)
 (*******************************************************************************)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 (* CSE 130 PA 3. Autotester *)
@@ -261,51 +220,50 @@ let score = ref 0
 let max = ref 0
 let timeout = 300
 
-let runWTimeout (f,arg,out,time) = 
+let runWTimeout (f,arg,out,time) =
   try if compare (f arg) out = 0 then Pass else Fail
-  with e -> (print130 ("Uncaught Exception: "^(Printexc.to_string e)^"\n"); ErrorCode "exception") 
+  with e -> (print130 ("Uncaught Exception: "^(Printexc.to_string e)^"\n"); ErrorCode "exception")
 
 exception TestException
 let testTest () =
   let testGood x = 1 in
-  let testBad x = 0 in 
+  let testBad x = 0 in
   let testException x = raise TestException in
   let rec testTimeout x = testTimeout x in
-    runWTimeout(testGood,0,1,5) = Pass &&  
-    runWTimeout(testBad,0,1,5) = Fail &&  
-    runWTimeout(testException,0,1,5) = ErrorCode "exception" && 
-    runWTimeout(testTimeout,0,1,5) = ErrorCode "timeout"
-
+  runWTimeout(testGood,0,1,5) = Pass &&
+  runWTimeout(testBad,0,1,5) = Fail &&
+  runWTimeout(testException,0,1,5) = ErrorCode "exception" &&
+  runWTimeout(testTimeout,0,1,5) = ErrorCode "timeout"
 
 let runTest (f,arg,out,points,name) =
   let _ = max := !max + points in
-  let outs = 
-    match runWTimeout(f,arg,out,timeout) with 
-        Pass -> (score := !score + points; "[pass]")
-      | Fail -> "[fail]"
-      | ErrorCode e -> "[error: "^e^"]"  in
-    name^" "^outs^" ("^(string_of_int points)^")\n"
+  let outs =
+    match runWTimeout(f,arg,out,timeout) with
+      Pass -> (score := !score + points; "[pass]")
+    | Fail -> "[fail]"
+    | ErrorCode e -> "[error: "^e^"]"  in
+  name^" "^outs^" ("^(string_of_int points)^")\n"
 
 (* explode : string -> char list *)
-let explode s = 
-  let rec _exp i = 
+let explode s =
+  let rec _exp i =
     if i >= String.length s then [] else (s.[i])::(_exp (i+1)) in
-    _exp 0
+  _exp 0
 
-let implode cs = 
+let implode cs =
   String.concat "" (List.map (String.make 1) cs)
 
-let drop_paren s = 
+let drop_paren s =
   implode (List.filter (fun c -> not (List.mem c ['(';' ';')'])) (explode s))
 
-let eq_real p (r1,r2) = 
+let eq_real p (r1,r2) =
   (r1 -. r2) < p || (r2 -. r1) < p
 
 let wrap_curried_2 f (a,b) = f a b
 
 let runAllTests () =
   let _ = (score := 0; max := 0) in
-  let report = 
+  let report =
     [runTest (sqsum, [], 0, 1, "sqsum 1");
      runTest (sqsum, [1;2;3;4], 30, 1, "sqsum 2");
      runTest (sqsum, [-1;-2;-3;-4], 30, 1, "sqsum 3");
@@ -343,10 +301,8 @@ let runAllTests () =
     ] in
   let s = Format.sprintf "Results: Score/Max = %d / %d \n" !score !max in
   let _ = List.iter print130 (report@([s])) in
-    (!score,!max)
+  (!score,!max)
 
 let _ = runAllTests ()
 
 let _ = print130 ("Compiled"^key^"\n")
-
-

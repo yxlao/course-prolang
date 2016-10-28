@@ -20,8 +20,8 @@
 let rec assoc (d,k,l) = match l with
   | [] -> d
   | h::t -> let (key,value) = h in
-        if k = key then value
-        else assoc (d,k,t)
+    if k = key then value
+    else assoc (d,k,t)
 
 (* uncomment after implementing assoc
 
@@ -45,16 +45,16 @@ let rec assoc (d,k,l) = match l with
 let removeDuplicates l =
   let rec helper (seen,rest) =
     match rest with
-      | [] -> seen
-      | h::t ->
-          let seen' =
-            if List.mem h seen then seen
-            else h :: seen
-          in
-          let rest' = t in
-            helper (seen',rest')
+    | [] -> seen
+    | h::t ->
+      let seen' =
+        if List.mem h seen then seen
+        else h :: seen
+      in
+      let rest' = t in
+      helper (seen',rest')
   in
-    List.rev (helper ([],l))
+  List.rev (helper ([],l))
 
 (* uncomment after implementing removeDuplicates
 
@@ -74,15 +74,14 @@ let removeDuplicates l =
 *)
 let rec wwhile (f,b) =
   let (next_b, is_valid) = f b in
-    if is_valid then wwhile (f, next_b)
-    else next_b
+  if is_valid then wwhile (f, next_b)
+  else next_b
 
 (* uncomment after implementing wwhile
 
    let f x = let xx = x*x*x in (xx, xx < 100) in
    wwhile (f, 2);;
 *)
-
 
 (* fixpoint : (int -> int) * int -> int
  * or more generally, fixpoint : ('a -> 'a) * 'a -> 'a
@@ -115,16 +114,15 @@ let fixpoint (f,b) = wwhile ((fun x -> let fx = (f x) in (fx, fx != x)),b)
 (* based on code by Chris Stone *)
 
 type expr =
-      VarX
-    | VarY
-    | Sine         of expr
-    | Cosine       of expr
-    | Average      of expr * expr
-    | Times        of expr * expr
-    | Thresh       of expr * expr * expr * expr
-    | Identity     of expr
-    | ThreeAverage of expr * expr * expr
-
+    VarX
+  | VarY
+  | Sine         of expr
+  | Cosine       of expr
+  | Average      of expr * expr
+  | Times        of expr * expr
+  | Thresh       of expr * expr * expr * expr
+  | Identity     of expr
+  | ThreeAverage of expr * expr * expr
 
 (* exprToString : expr -> string
    Complete this function to convert an expr to a string
@@ -142,7 +140,6 @@ let rec exprToString e = match e with
   | ThreeAverage(x,y,z) -> "(" ^ exprToString x ^ "+" ^ exprToString y ^ "+"
                            ^ exprToString z ^ ")/3"
 
-
 (* uncomment after implementing exprToString
 
    let sampleExpr1 = Thresh(VarX,VarY,VarX,(Times(Sine(VarX),Cosine(Average(VarX,VarY)))));;
@@ -150,7 +147,6 @@ let rec exprToString e = match e with
    let _ = exprToString sampleExpr1
 
 *)
-
 
 (* build functions:
    Use these helper functions to generate elements of the expr
@@ -166,7 +162,6 @@ let buildTimes(e1,e2)              = Times(e1,e2)
 let buildThresh(a,b,a_less,b_less) = Thresh(a,b,a_less,b_less)
 let buildIdentity(e)               = Identity(e)
 let buildThreeAverage(x,y,z)       = ThreeAverage(x,y,z)
-
 
 let pi = 4.0 *. atan 1.0
 
@@ -184,30 +179,27 @@ let rec eval (e,x,y) = match e with
   | Identity(expr)                    -> eval (expr,x,y)
   | ThreeAverage(expr1, expr2, expr3) -> ((eval (expr1,x,y)) +. (eval (expr2,x,y)) +. (eval (expr3,x,y))) /. 3.0
 
-
 let eval_fn e (x,y) =
   let rv = eval (e,x,y) in
-    assert (-1.0 <= rv && rv <= 1.0);
-    rv
+  assert (-1.0 <= rv && rv <= 1.0);
+  rv
 
 let sampleExpr =
   buildCosine(buildSine(buildTimes(buildCosine(buildAverage(buildCosine(
-                                                              buildX()),buildTimes(buildCosine (buildCosine (buildAverage
-                                                                                                               (buildTimes (buildY(),buildY()),buildCosine (buildX())))),
-                                                                                   buildCosine (buildTimes (buildSine (buildCosine
-                                                                                                                         (buildY())),buildAverage (buildSine (buildX()), buildTimes
-                                                                                                                                                                           (buildX(),buildX()))))))),buildY())))
+      buildX()),buildTimes(buildCosine (buildCosine (buildAverage
+                                                       (buildTimes (buildY(),buildY()),buildCosine (buildX())))),
+                           buildCosine (buildTimes (buildSine (buildCosine
+                                                                 (buildY())),buildAverage (buildSine (buildX()), buildTimes
+                                                                                             (buildX(),buildX()))))))),buildY())))
 
 let sampleExpr2 =
   buildThresh(buildX(),buildY(),buildSine(buildX()),buildCosine(buildY()))
-
 
 (* uncomment after implementing eval
    let _ = eval (Sine(Average(VarX,VarY)),0.5,-0.5);;
    let _ = eval (Sine(Average(VarX,VarY)),0.3,0.3);;
    let _ = eval (sampleExpr,0.5,0.2);;
 *)
-
 
 (******************* Functions you need to write **********)
 
@@ -223,23 +215,21 @@ let sampleExpr2 =
 let rec build (rand, depth) =
   if depth = 0 then
     match rand (0,2) with
-      | 0 -> buildX()
-      | 1 -> buildY()
-      | _ -> buildX()
+    | 0 -> buildX()
+    | 1 -> buildY()
+    | _ -> buildX()
   else
     match rand (0,7) with
-      | 0 -> buildSine (build (rand, depth-1))
-      | 1 -> buildCosine (build (rand, depth-1))
-      | 2 -> buildAverage (build (rand, depth-1), build (rand, depth-1))
-      | 3 -> buildTimes (build (rand, depth-1), build (rand, depth-1))
-      | 4 -> buildThresh (build (rand, depth-1), build (rand, depth-1),
-                          build (rand, depth-1), build (rand, depth-1))
-      | 5 -> buildIdentity (build (rand, depth-1))
-      | 6 -> buildThreeAverage (build (rand, depth-1), build (rand, depth-1),
-                                build (rand, depth-1))
-      | _ -> buildSine (build (rand, depth-1))
-
-
+    | 0 -> buildSine (build (rand, depth-1))
+    | 1 -> buildCosine (build (rand, depth-1))
+    | 2 -> buildAverage (build (rand, depth-1), build (rand, depth-1))
+    | 3 -> buildTimes (build (rand, depth-1), build (rand, depth-1))
+    | 4 -> buildThresh (build (rand, depth-1), build (rand, depth-1),
+                        build (rand, depth-1), build (rand, depth-1))
+    | 5 -> buildIdentity (build (rand, depth-1))
+    | 6 -> buildThreeAverage (build (rand, depth-1), build (rand, depth-1),
+                              build (rand, depth-1))
+    | _ -> buildSine (build (rand, depth-1))
 
 (* g1,g2,g3,c1,c2,c3 : unit -> int * int * int
  * these functions should return the parameters needed to create your
@@ -254,7 +244,6 @@ let g3 () = (8, 2, 5)
 let c1 () = (8, 165, 3)
 let c2 () = (8, 38, 98)
 let c3 () = (8, 151, 115)
-
 
 (******************** Random Number Generators ************)
 
@@ -273,8 +262,7 @@ let c3 () = (8, 151, 115)
 let makeRand (seed1, seed2) =
   let seed = (Array.of_list [seed1;seed2]) in
   let s = Random.State.make seed in
-    (fun (x,y) -> (x + (Random.State.int s (y-x))))
-
+  (fun (x,y) -> (x + (Random.State.int s (y-x))))
 
 let rec rseq g r n =
   if n <= 0 then [] else (g r)::(rseq g r (n-1))
@@ -292,7 +280,6 @@ let toReal (i,n) = (float_of_int i) /. (float_of_int n)
 (* Converts real in [-1,1] to an integer in the range [0,255]  *)
 let toIntensity z = int_of_float (127.5 +. (127.5 *. z))
 
-
 (* ffor: int * int * (int -> unit) -> unit
    Applies the function f to all the integers between low and high
    inclusive; the results get thrown away.
@@ -301,7 +288,7 @@ let toIntensity z = int_of_float (127.5 +. (127.5 *. z))
 let rec ffor (low,high,f) =
   if low > high then () else
     let _ = f low in
-      ffor (low+1,high,f)
+    ffor (low+1,high,f)
 
 (* emitGrayscale :  ((real * real) -> real) * int -> unit
    emitGrayscale(f, N) emits the values of the expression
@@ -332,11 +319,11 @@ let emitGrayscale (f,n,name) =
                     let z = f (x,y) in
                     (* Convert the result to a grayscale value *)
                     let iz = toIntensity(z) in
-                      (* Emit one byte for this pixel *)
-                      output_char chan (char_of_int iz))) in
-    close_out chan;
-    ignore(Sys.command ("convert "^fname^".pgm "^fname^".jpg"));
-    ignore(Sys.command ("rm "^fname^".pgm"))
+                    (* Emit one byte for this pixel *)
+                    output_char chan (char_of_int iz))) in
+  close_out chan;
+  ignore(Sys.command ("convert "^fname^".pgm "^fname^".jpg"));
+  ignore(Sys.command ("rm "^fname^".pgm"))
 
 (* doRandomGray : int * int * int -> unit
    Given a depth and two seeds for the random number generator,
@@ -354,14 +341,13 @@ let doRandomGray (depth,seed1,seed2) =
   let n = 150 in
   (* Emit the picture *)
   let name = Format.sprintf "%d_%d_%d" depth seed1 seed2 in
-    emitGrayscale (f,n,name)
+  emitGrayscale (f,n,name)
 
 (* uncomment when you have implemented `build`
 
    let _ = emitGrayscale (eval_fn sampleExpr, 150, "sample") ;;
 
 *)
-
 
 (* emitColor : (real*real->real) * (real*real->real) *
    (real*real->real) * int -> unit
@@ -400,14 +386,14 @@ let emitColor (f1,f2,f3,n,name) =
                     let iz2 = toIntensity(z2) in
                     let iz3 = toIntensity(z3) in
 
-                      (* Emit one byte per color for this pixel *)
-                      output_char chan (char_of_int iz1);
-                      output_char chan (char_of_int iz2);
-                      output_char chan (char_of_int iz3);
+                    (* Emit one byte per color for this pixel *)
+                    output_char chan (char_of_int iz1);
+                    output_char chan (char_of_int iz2);
+                    output_char chan (char_of_int iz3);
                  )) in
-    close_out chan;
-    ignore(Sys.command ("convert "^fname^".ppm  "^fname^".jpg"));
-    ignore(Sys.command ("rm "^fname^".ppm"))
+  close_out chan;
+  ignore(Sys.command ("convert "^fname^".ppm  "^fname^".jpg"));
+  ignore(Sys.command ("rm "^fname^".ppm"))
 
 (* doRandomColor : int * int * int -> unit
    Given a depth and two seeds for the random number generator,
@@ -435,7 +421,7 @@ let doRandomColor (depth,seed1,seed2) =
   let n = 150 in
   (* Emit the picture *)
   let name = Format.sprintf "%d_%d_%d" depth seed1 seed2 in
-    emitColor (f1,f2,f3,n,name)
+  emitColor (f1,f2,f3,n,name)
 
 (****************************************************************************************)
 (*** Testing Code ***********************************************************************)
@@ -466,25 +452,25 @@ let testTest () =
   let testBad x = 0 in
   let testException x = raise TestException in
   let rec testTimeout x = testTimeout x in
-    runWTimeout(testGood,0,1,5) = Pass &&
-    runWTimeout(testBad,0,1,5) = Fail &&
-    runWTimeout(testException,0,1,5) = ErrorCode "exception" &&
-    runWTimeout(testTimeout,0,1,5) = ErrorCode "timeout"
+  runWTimeout(testGood,0,1,5) = Pass &&
+  runWTimeout(testBad,0,1,5) = Fail &&
+  runWTimeout(testException,0,1,5) = ErrorCode "exception" &&
+  runWTimeout(testTimeout,0,1,5) = ErrorCode "timeout"
 
 let runTest ((f,arg,out),points,name) =
   let _   = max := !max + points in
   let outs =
     match runWTimeout(f,arg,out,timeout) with
-        Pass -> (score := !score + points; "[pass]")
-      | Fail -> "[fail]"
-      | ErrorCode e -> "[error: "^e^"]"  in
-    name^" "^outs^" ("^(string_of_int points)^")\n"
+      Pass -> (score := !score + points; "[pass]")
+    | Fail -> "[fail]"
+    | ErrorCode e -> "[error: "^e^"]"  in
+  name^" "^outs^" ("^(string_of_int points)^")\n"
 
 (* explode : string -> char list *)
 let explode s =
   let rec _exp i =
     if i >= String.length s then [] else (s.[i])::(_exp (i+1)) in
-    _exp 0
+  _exp 0
 
 let implode cs =
   String.concat "" (List.map (String.make 1) cs)
@@ -505,92 +491,92 @@ let scoreMsg () =
 let sampleTests =
   [
     (fun () -> mkTest
-                 assoc
-                 (-1, "william", [("ranjit",85);("william",23);("moose",44)])
-                 23
-                 "sample: assoc 1"
+        assoc
+        (-1, "william", [("ranjit",85);("william",23);("moose",44)])
+        23
+        "sample: assoc 1"
     );
     (fun () -> mkTest
-                 assoc
-                 (-1, "bob", [("ranjit",85);("william",23);("moose",44)])
-                 (-1)
-                 "sample: assoc 2"
+        assoc
+        (-1, "bob", [("ranjit",85);("william",23);("moose",44)])
+        (-1)
+        "sample: assoc 2"
     );
     (fun () -> mkTest
-                 removeDuplicates
-                 [1;6;2;4;12;2;13;6;9]
-                 [1;6;2;4;12;13;9]
-                 "sample: removeDuplicates 2"
+        removeDuplicates
+        [1;6;2;4;12;2;13;6;9]
+        [1;6;2;4;12;13;9]
+        "sample: removeDuplicates 2"
     );
     (fun () -> mkTest
-                 removeDuplicates
-                 [1;1;1]
-                 [1]
-                 "sample: removeDuplicates 2"
-    );
-
-    (fun () -> mkTest
-                 wwhile
-                 ((fun x -> let xx = x*x*x in (xx, xx < 100)), 2)
-                 512
-                 "sample: wwhile 1"
-    );
-    (fun () -> mkTest
-                 fixpoint
-                 ((fun x -> truncate (1e6 *. cos (1e-6 *. float x))), 0)
-                 739085
-                 "sample: fixpoint 1"
+        removeDuplicates
+        [1;1;1]
+        [1]
+        "sample: removeDuplicates 2"
     );
 
     (fun () -> mkTest
-                 emitGrayscale
-                 (eval_fn sampleExpr, 150,"sample")
-                 ()
-                 "sample: eval_fn 1: manual"
+        wwhile
+        ((fun x -> let xx = x*x*x in (xx, xx < 100)), 2)
+        512
+        "sample: wwhile 1"
     );
     (fun () -> mkTest
-                 emitGrayscale
-                 (eval_fn sampleExpr2, 150,"sample2")
-                 ()
-                 "sample: eval_fn 2: manual"
-    );
-
-    (fun () -> mkTest
-                 (fun () -> doRandomGray (g1 ()))
-                 ()
-                 ()
-                 "sample: gray 1 : manual"
-    );
-    (fun () -> mkTest
-                 (fun () -> doRandomGray (g2 ()))
-                 ()
-                 ()
-                 "sample: gray 2 : manual"
-    );
-    (fun () -> mkTest
-                 (fun () -> doRandomGray (g3 ()))
-                 ()
-                 ()
-                 "sample: gray 3 : manual"
+        fixpoint
+        ((fun x -> truncate (1e6 *. cos (1e-6 *. float x))), 0)
+        739085
+        "sample: fixpoint 1"
     );
 
     (fun () -> mkTest
-                 (fun () -> doRandomColor (c1 ()))
-                 ()
-                 ()
-                 "sample: color 1 : manual"
+        emitGrayscale
+        (eval_fn sampleExpr, 150,"sample")
+        ()
+        "sample: eval_fn 1: manual"
     );
     (fun () -> mkTest
-                 (fun () -> doRandomColor (c2 ()))
-                 ()
-                 ()
-                 "sample: color 2 : manual"
+        emitGrayscale
+        (eval_fn sampleExpr2, 150,"sample2")
+        ()
+        "sample: eval_fn 2: manual"
+    );
+
+    (fun () -> mkTest
+        (fun () -> doRandomGray (g1 ()))
+        ()
+        ()
+        "sample: gray 1 : manual"
     );
     (fun () -> mkTest
-                 (fun () -> doRandomColor (c3 ()))
-                 ()
-                 ()
-                 "sample: color 3 : manual"
+        (fun () -> doRandomGray (g2 ()))
+        ()
+        ()
+        "sample: gray 2 : manual"
+    );
+    (fun () -> mkTest
+        (fun () -> doRandomGray (g3 ()))
+        ()
+        ()
+        "sample: gray 3 : manual"
+    );
+
+    (fun () -> mkTest
+        (fun () -> doRandomColor (c1 ()))
+        ()
+        ()
+        "sample: color 1 : manual"
+    );
+    (fun () -> mkTest
+        (fun () -> doRandomColor (c2 ()))
+        ()
+        ()
+        "sample: color 2 : manual"
+    );
+    (fun () -> mkTest
+        (fun () -> doRandomColor (c3 ()))
+        ()
+        ()
+        "sample: color 3 : manual"
     )]
 
 let doTest f =
@@ -602,5 +588,4 @@ let _ =
   let report = List.map doTest sampleTests                in
   let _      = List.iter print130 (report@([scoreMsg()])) in
   let _      = print130 ("Compiled\n")                    in
-    (!score, !max)
-
+  (!score, !max)
